@@ -10,4 +10,14 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    /**
+     * @SWG\Swagger(
+     *   basePath="/api",
+     *   @SWG\Info(
+     *     title="test API",
+     *     version="1.0.0"
+     *   )
+     * )
+     */
 }

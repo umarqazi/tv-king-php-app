@@ -16,3 +16,7 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::prefix('/brand/v1')->group(function () {
+    Route::post('/signup', '\App\Http\Controllers\Api\Brand\v1\SignupController@register');
+});
