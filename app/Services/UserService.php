@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\User;
+
 /**
  * Class UserService
  * @package App\Services
@@ -15,6 +17,8 @@ class UserService extends BaseService {
      */
     public function persist($params)
     {
+        $entity = new User();
+
         // TODO: Implement persist() method.
     }
 

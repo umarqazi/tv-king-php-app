@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -16,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','user_type', 'profile_image'
     ];
 
     /**
@@ -27,4 +28,18 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+
+    /*protected function setKeysForSaveQuery(Builder $query)
+    {
+        $query
+            ->where('email', '=', $this->getAttribute('email'))
+            ->where('user_type', '=', $this->getAttribute('user_type'));
+        return $query;
+    }*/
+
+    public function userExists($params){
+       return $this->where('email', $params['email'])->where('user_type' , $params['user_type'])->first();
+    }
+    
 }

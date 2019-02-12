@@ -15,8 +15,8 @@ class CreateTricksTable extends Migration
     {
         Schema::create('tricks', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('image');
-            $table->string('type');
+            $table->text('trick');
+            $table->integer('type');
 
             /*User ID as Foreign Key in Tricks Table*/
             $table->unsignedInteger('user_id')->nullable();

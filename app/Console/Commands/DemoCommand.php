@@ -2,8 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Requests\ChallengeRequest;
+use App\Http\Requests\UserSignup;
 use App\Services\BrandService;
+use App\Services\ChallengeService;
+use App\Services\SignupService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\App;
 
 class DemoCommand extends Command
 {
@@ -12,7 +17,7 @@ class DemoCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'demo:install';
 
     /**
      * The console command description.
@@ -43,12 +48,18 @@ class DemoCommand extends Command
 
 
     private function createBrand(){
-        $request = new BrandRequest();
-        $request->email = "umar.farooq@gems.techverx.com";
+
+        $request = new UserSignup();
+        /** @var $request UserSignup */
+        //$request->request->set('name', 'umar');
+        $request->name = "umar";
+        $request->email = "e@mail.com";
         $request->password = "abc123";
 
-        $service = new BrandService();
-        $brand = $service->persist($request);
+        $service = new SignupService();
 
+        $saved = $service->persist2($request);
+
+        dd([$saved]);
     }
 }

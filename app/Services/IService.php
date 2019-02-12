@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Http\Requests\UserSignup;
+
 /**
  * Interface IService
  * @package App\Services
@@ -13,7 +15,7 @@ interface IService{
      * @param $params
      * @return mixed
      */
-    public function persist( $params);
+    public function persist($params);
 
     /**
      * @param $id

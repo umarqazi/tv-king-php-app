@@ -6,9 +6,10 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
-class BrandSignup extends ApiFormRequest
+class UserSignup extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,9 +29,9 @@ class BrandSignup extends ApiFormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required',
-            'last_name'  => 'required',
-            'email'      => 'required',
+            'name'      => 'required|max:191',
+            'email'     => 'required|email|max:191',
+            'password'  => 'required|min:8|confirmed',
         ];
     }
 

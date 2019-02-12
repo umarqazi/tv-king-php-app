@@ -27,12 +27,12 @@ abstract class ApiFormRequest extends FormRequest
     {
         $errors = (new ValidationException($validator))->errors();
 
-        throw new HttpResponseException(
-            response()->json([
-                'code' => 400,
-                'message' => 'Please fix following errors',
-                'errors' => $errors
-            ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY)
-        );
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => false,
+            'message' => 'Please fix following errors',
+            'errors' => $errors,
+            'body' => null
+        ],Response::HTTP_OK);
     }
 }

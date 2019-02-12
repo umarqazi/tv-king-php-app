@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use App\Repositories\ChallengeRepo;
 use App\Repositories\UserRepo;
 
@@ -18,7 +19,17 @@ class ChallengeService extends BaseService {
      */
     public function persist($params)
     {
+        if(!$this->validate($params)){
+        }
+        // validation params ???
+        $users = User::all(['active' => true]);
+        $this->repo->activeOnly(  );
+
         // TODO: Implement persist() method.
+    }
+
+    public function update_name($params){
+
     }
 
     /**
