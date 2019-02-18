@@ -58,7 +58,7 @@ class DemoCommand extends Command
 
         $service = new SignupService();
 
-        $saved = $service->persist2($request);
+        $saved = $service->persist2 ($request);
 
         dd([$saved]);
     }

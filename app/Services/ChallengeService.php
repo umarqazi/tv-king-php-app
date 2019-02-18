@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\User;
-use App\Repositories\ChallengeRepo;
-use App\Repositories\UserRepo;
+use App\Models\Challenge;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\JWTAuth;
 
 /**
  * Class ChallengeService
@@ -13,19 +15,72 @@ use App\Repositories\UserRepo;
  */
 class ChallengeService extends BaseService {
 
+    protected $challenge;
+    protected $params;
+
+    public function __construct(Challenge $challenge)
+    {
+        $this->challenge  = $challenge;
+    }
+
+    public function setParams($params){
+        $this->params['name']           = $params['name'];
+        $this->params['description']    = $params['description'];
+        $this->params['location']       = $params['location'];
+        $this->params['reward']         = $params['reward'];
+        $this->params['status']         = 1;
+        $this->params['user_id']        = Auth::user()->id;
+        $response = $this->persist($this->params);
+        return $response;
+    }
+
     /**
      * @param $params
      * @return mixed
      */
     public function persist($params)
     {
-        if(!$this->validate($params)){
-        }
-        // validation params ???
-        $users = User::all(['active' => true]);
-        $this->repo->activeOnly(  );
+        $rules = [
+            'name'          => 'required|max:191',
+            'description'   => 'required|max:191',
+            'location'      => 'required|max:191',
+            'reward'        => 'required|integer',
+            'status'        => 'required|integer',
+            'user_id'       => 'required|integer',
+        ];
 
-        // TODO: Implement persist() method.
+        return $this->validateRequest($params, $rules);
+    }
+
+    public function validateRequest($params, $rules)
+    {
+        $validator = Validator::make($params, $rules);
+
+        $errors = $validator->errors();
+
+        if($validator->fails()) {
+
+            /*Response for Failed Validation*/
+            return response([
+                'http-status' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                'status' => false,
+                'message' => 'Invalid Data!',
+                'body' => $params,
+                'errors' => $errors,
+            ],Response::HTTP_UNPROCESSABLE_ENTITY);
+
+        } else {
+            $challenge = $this->challenge->create($params);
+
+            /*Response for Successful User Creation*/
+            return response([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Challenge Has been Created Successfully!',
+                'body' => $challenge,
+                'errors' => null,
+            ],Response::HTTP_OK);
+        }
     }
 
     public function update_name($params){
@@ -38,7 +93,7 @@ class ChallengeService extends BaseService {
      */
     public function findById($id)
     {
-        // TODO: Implement findById() method.
+
     }
 
     /**
@@ -47,7 +102,7 @@ class ChallengeService extends BaseService {
      */
     public function remove($id)
     {
-        // TODO: Implement remove() method.
+
     }
 
     /**
@@ -56,6 +111,6 @@ class ChallengeService extends BaseService {
      */
     public function search($params)
     {
-        // TODO: Implement search() method.
+
     }
 }

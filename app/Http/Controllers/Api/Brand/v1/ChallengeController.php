@@ -8,11 +8,13 @@
 
 namespace App\Http\Controllers\Api\Brand\v1;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ChallengeRequest;
 use App\Models\Challenge;
 use App\Services\ChallengeService;
+use Illuminate\Http\Request;
 
-class ChallengeController implements CrudController
+class ChallengeController extends Controller
 {
     protected $challenge_service;
 
@@ -28,6 +30,13 @@ class ChallengeController implements CrudController
      *   operationId="store",
      *   produces={"application/json"},
      *   tags={"Challenge"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Auth Token",
+     *     required=true,
+     *     type="string"
+     *   ),
      *   @SWG\Parameter(
      *     name="name",
      *     in="formData",
@@ -56,33 +65,14 @@ class ChallengeController implements CrudController
      *     required=true,
      *     type="integer"
      *   ),
-     *   @SWG\Parameter(
-     *     name="status",
-     *     in="formData",
-     *     description="Challenge Status",
-     *     required=true,
-     *     type="integer"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="user_type",
-     *     in="formData",
-     *     description="User Type",
-     *     required=true,
-     *     type="integer"
-     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *
      */
-    public function create(ChallengeRequest $request){
-
-        /*//kjadhfjasdhasjdklashjkldashd
-        $challenge = new Challenge();
-        $challenge->brand_id = $_SESSION['user_id'];
-
-        $service->persist($aprams);
-        $errors ???*/
+    public function store(Request $request){
+        $response =$this->challenge_service->setParams($request->all());
+        return $response;
     }
 }
