@@ -11,9 +11,10 @@ namespace App\Services;
 use App\Http\Requests\UserSignup;
 use \App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\JWTAuth;
+use JWTAuth;
 
 class SignupService extends BaseService
 {
@@ -47,9 +48,10 @@ class SignupService extends BaseService
     public function asBrand($params){
         $this->userParams['name'] = $params['name'];
         $this->userParams['email'] = $params['email'];
-        $this->userParams['user_type'] = 2;
         $this->userParams['password'] = $params['password'];
         $this->userParams['password_confirmation'] = $params['password_confirmation'];
+
+        $this->userParams['user_type'] = 2;
         $response = $this->persist($this->userParams);
         return $response;
     }
@@ -81,29 +83,23 @@ class SignupService extends BaseService
             'password'  => 'required|min:8|confirmed',
         ];
 
-        return $this->validateRequest($params, $rules);
-    }
-
-    public function validateRequest($params, $rules){
-        $validator = Validator::make($params, $rules);
-
-        $errors = $validator->errors();
+        $response = $this->validateRequest($params, $rules);
 
         /*Set Password Params to null*/
         $params['password'] = null;
         $params['password_confirmation'] = null;
 
-        if($validator->fails()){
-            /*Response for Failed Validation*/
+        if (!$response['status']){
+            /*Send Response if Validation Fails*/
             return response([
                 'http-status' => Response::HTTP_UNPROCESSABLE_ENTITY,
                 'status' => false,
-                'message' => 'Invalid Details!',
+                'message' => 'Invalid Data!',
                 'body' => $params,
-                'errors' => $errors,
+                'errors' => $response['errors'],
             ],Response::HTTP_UNPROCESSABLE_ENTITY);
-
         } else {
+            /*Check if User Exists with same Role and Email*/
             $user = $this->user->userExists($params);
             if ($user) {
                 /*Response for Already existing User*/
@@ -132,26 +128,67 @@ class SignupService extends BaseService
 
     /**
      * @param $params
+     * @param $rules
+     * @return array
+     */
+    public function validateRequest($params, $rules){
+        $validator = Validator::make($params, $rules);
+
+        $errors = $validator->errors();
+
+        if($validator->fails()){
+            return array('status' => false, 'errors' => $errors);
+        } else{
+            return array('status' => true, 'errors' => null);
+        }
+    }
+
+    /*public function loginAsAdmin($params){
+        $this->userParams['email']      = $params['email'];
+        $this->userParams['password']   = $params['password'];
+        $this->userParams['user_type']  = 1;
+        $response = $this->login($this->userParams);
+        return $response;
+    }
+
+    public function loginAsBrand($params){
+        $this->userParams['email']      = $params['email'];
+        $this->userParams['password']   = $params['password'];
+        $this->userParams['user_type']  = 2;
+        $response = $this->login($this->userParams);
+        return $response;
+    }
+
+    public function loginAsCustomer($params){
+        $this->userParams['email']      = $params['email'];
+        $this->userParams['password']   = $params['password'];
+        $this->userParams['user_type']  = 3;
+        $response =  $this->login($this->userParams);
+        return $response;
+    }*/
+
+    /**
+     * @param $params
      * @return mixed
      */
     public function login($params)
     {
         $rules = [
             'email'     => 'required|email|max:191',
-            'password'  => 'required',
+            'password'  => 'required'
         ];
 
-        $validator = Validator::make($params, $rules);
-        $errors = $validator->errors();
-
-        $params['password'] = null;
-        if ($validator->fails()){
+        $response = $this->validateRequest($params, $rules);
+        /*Set Password to null*/
+        if (!$response['status']){
+            $params['password'] = null;
+            /*Send Response if Validation Fails*/
             return response()->json([
                 'http-status' => Response::HTTP_UNPROCESSABLE_ENTITY,
                 'status' => false,
                 'message' => 'Invalid Data!',
                 'body' => $params,
-                'errors' => $errors,
+                'errors' => $response['errors'],
             ],Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             $credentials = [
@@ -159,24 +196,28 @@ class SignupService extends BaseService
                 'password' => $params['password']
             ];
 
-            if (! $token = $this->auth->attempt($credentials)) {
+            $token = auth()->attempt($credentials);
+
+            if (!$token ) {
                 $params['password'] = null;
+                /*Send Response if Login Fails*/
                 return response()->json([
                     'http-status' => Response::HTTP_UNAUTHORIZED,
                     'status' => false,
                     'message' => 'We cant find an account with these credentials.',
                     'body' => $params
                 ],Response::HTTP_UNAUTHORIZED);
+            }else{
+                $response_token = $this->respondWithToken($token);
+                /*Send Response for Successful Login*/
+                return response()->json ([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'User Successfully Logged In!',
+                    'body' => $token,
+                    'errors' =>null
+                ],Response::HTTP_OK);
             }
-
-            $response_token = $this->respondWithToken($token);
-            return response()->json ([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'User Successfully Logged In!',
-                'body' => $token,
-                'errors' =>null
-            ],Response::HTTP_OK);
         }
     }
 
@@ -201,6 +242,8 @@ class SignupService extends BaseService
     {
         if ($this->auth->authenticate()){
             auth()->logout();
+
+            /*Send Response for Successful Logout*/
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
@@ -208,6 +251,7 @@ class SignupService extends BaseService
                 'body' => null
             ],Response::HTTP_OK);
         } else {
+            /*Send Response if User is Unauthorized*/
             return response()->json([
                 'http-status' => Response::HTTP_UNPROCESSABLE_ENTITY,
                 'status' => false,
@@ -215,6 +259,60 @@ class SignupService extends BaseService
                 'body' => null
             ],Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+    }
+
+    public function passwordReset($params)
+    {
+        $rules = [
+            'prev_password'     => 'required',
+            'password'          => 'required|min:8|confirmed',
+        ];
+
+        $response = $this->validateRequest($params, $rules);
+
+        /*Set Password Params to null*/
+        $params['prev_password'] = null;
+        $params['password'] = null;
+        $params['password_confirmation'] = null;
+
+        if (!$response['status']){
+            /*Send Response if Validation Fails*/
+            return response([
+                'http-status' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                'status' => false,
+                'message' => 'Invalid Data!',
+                'body' => $params,
+                'errors' => $response['errors'],
+            ],Response::HTTP_UNPROCESSABLE_ENTITY);
+        } else {
+            $user = $this->auth->authenticate();
+
+            if (!Hash::check($params['prev_password'], $user['password'])) {
+                /*Send Response if Previous Password didn't Match*/
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => 'Your provided password didn\'t match.',
+                    'body' => null
+                ], Response::HTTP_OK);
+            } else {
+                // all good so Reset User's Password
+                $user = $this->updatePassword($params);
+
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Password has been Successfully Updated!',
+                    'body' => $user,
+                ], Response::HTTP_OK);
+            }
+        }
+    }
+
+    public function updatePassword($params){
+        $user = $this->auth->user();
+        $this->user->where('id', $user->id)->update(array('password' => Hash::make($params['password'])));
+        return $user;
     }
 
     /**

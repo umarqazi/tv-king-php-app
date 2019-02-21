@@ -94,7 +94,7 @@ class SignupController extends Controller
      *
      */
     public function login(Request $request){
-        $response = $this->signup_service->login($request->all());
+        $response = $this->signup_service->loginAsCustomer($request->all());
         return $response;
     }
 

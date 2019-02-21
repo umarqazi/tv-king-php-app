@@ -23,7 +23,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::prefix('/brand/v1/')->group(function () {
         Route::post('/challenge/create', '\App\Http\Controllers\Api\Brand\v1\ChallengeController@store');
         Route::post('/logout', '\App\Http\Controllers\Api\Brand\v1\SignupController@logout');
-
+        Route::post('/password/reset', '\App\Http\Controllers\Api\Brand\v1\SignupController@passwordReset');
     });
 
     //Admin APIs
@@ -42,7 +42,6 @@ Route::group(['middleware' => 'jwt.auth'], function () {
 Route::prefix('/brand/v1/')->group(function () {
     Route::post('/signup', '\App\Http\Controllers\Api\Brand\v1\SignupController@register');
     Route::post('/login', '\App\Http\Controllers\Api\Brand\v1\SignupController@login');
-
 });
 
 //Admin APIs

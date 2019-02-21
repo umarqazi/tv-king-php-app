@@ -49,7 +49,41 @@ class ChallengeService extends BaseService {
             'user_id'       => 'required|integer',
         ];
 
-        return $this->validateRequest($params, $rules);
+//        return $this->validateRequest($params, $rules);
+
+        $response = $this->validateRequest($params, $rules);
+
+        if (!$response['status']){
+            return response([
+                'http-status' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                'status' => false,
+                'message' => 'Invalid Data!',
+                'body' => $params,
+                'errors' => $response['errors'],
+            ],Response::HTTP_UNPROCESSABLE_ENTITY);
+        } else {
+            $user = Auth::user();
+            if($user['user_type'] == 2){
+                $challenge = $this->challenge->create($params);
+
+                /*Response for Successful User Creation*/
+                return response([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Challenge Has been Created Successfully!',
+                    'body' => $user,
+                    'errors' => null,
+                ],Response::HTTP_OK);
+            } else{
+                return response([
+                    'http-status' => Response::HTTP_UNAUTHORIZED,
+                    'status' => false,
+                    'message' => 'You are Unauthorized to create Challenge!',
+                    'body' => null,
+                    'errors' => null,
+                ],Response::HTTP_UNAUTHORIZED);
+            }
+        }
     }
 
     public function validateRequest($params, $rules)
@@ -58,28 +92,10 @@ class ChallengeService extends BaseService {
 
         $errors = $validator->errors();
 
-        if($validator->fails()) {
-
-            /*Response for Failed Validation*/
-            return response([
-                'http-status' => Response::HTTP_UNPROCESSABLE_ENTITY,
-                'status' => false,
-                'message' => 'Invalid Data!',
-                'body' => $params,
-                'errors' => $errors,
-            ],Response::HTTP_UNPROCESSABLE_ENTITY);
-
-        } else {
-            $challenge = $this->challenge->create($params);
-
-            /*Response for Successful User Creation*/
-            return response([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'Challenge Has been Created Successfully!',
-                'body' => $challenge,
-                'errors' => null,
-            ],Response::HTTP_OK);
+        if($validator->fails()){
+            return array('status' => false, 'errors' => $errors);
+        } else{
+            return array('status' => true, 'errors' => null);
         }
     }
 
