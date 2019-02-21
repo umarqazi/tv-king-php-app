@@ -17,7 +17,7 @@ class CreateTagsTable extends Migration
             $table->increments('id');
             $table->string('name');
 
-            /*Challenge ID as Foreign Key in Tags Table*/
+            /*Challenge ID as Foreign Key in Tag Table*/
             $table->unsignedInteger('challenge_id')->nullable();
             $table->foreign('challenge_id')->references('id')->on('challenges')->onDelete('cascade');
 

@@ -3,6 +3,9 @@
 /public/storage
 /public/uploads
 /public/project_assets
+./public/vendor/l5-swagger
+./resources/views/vendor/l5-swagger
+./storage/api-docs
 /storage/*.key
 /vendor
 /.idea
