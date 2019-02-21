@@ -49,8 +49,6 @@ class ChallengeService extends BaseService {
             'user_id'       => 'required|integer',
         ];
 
-//        return $this->validateRequest($params, $rules);
-
         $response = $this->validateRequest($params, $rules);
 
         if (!$response['status']){
@@ -71,7 +69,7 @@ class ChallengeService extends BaseService {
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Challenge Has been Created Successfully!',
-                    'body' => $user,
+                    'body' => $challenge,
                     'errors' => null,
                 ],Response::HTTP_OK);
             } else{
