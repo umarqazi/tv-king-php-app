@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Api\Brand\v1;
 
+use App\Forms\Challenge\SearchForm;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChallengeRequest;
 use App\Models\Challenge;
@@ -82,5 +83,19 @@ class ChallengeController extends Controller
         $form = new ChallengeCreatorForm();
         $response =$this->challengeService->persist();
         return $response;
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function view($id){
+        return $this->challengeService->findById($id);
+    }
+
+
+    public function index(Request $request){
+        $form = new SearchForm();
+        return $this->challengeService->search( $form );
     }
 }

@@ -19,6 +19,10 @@ class CreatorForm extends BaseForm
     public $name;
     public $description;
     public $brand_id;
+    public $location;
+    public $latitude;
+    public $longitude;
+    public $tags;
 
     /**
      * @return mixed
@@ -27,7 +31,6 @@ class CreatorForm extends BaseForm
     {
         return [
             'name' => 'required',
-            'description' => 'safe',
             'brand_id' => 'required|integer'
         ];
     }
@@ -40,6 +43,14 @@ class CreatorForm extends BaseForm
      */
     public function toArray()
     {
-        // TODO: Implement toArray() method.
+        return [
+            'name' => $this->name,
+            'description' => $this->description,
+            'brand_id'=> $this->brand_id,
+            'location' => $this->location,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+            'tags' => $this->tags
+        ];
     }
 }

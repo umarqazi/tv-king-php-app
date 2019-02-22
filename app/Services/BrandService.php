@@ -12,42 +12,13 @@ use App\Forms\BaseListForm;
 use App\Forms\IForm;
 use App\Forms\IListForm;
 
-class BrandService extends BaseService
+class BrandService extends UserService
 {
 
-    /**
-     * @param $params
-     * @return mixed
-     */
-    public function persist(IForm $request)
+    public function persist(IForm $form)
     {
-        // TODO: Implement persist() method.
-    }
-
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function findById($id)
-    {
-        // TODO: Implement findById() method.
-    }
-
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function remove($id)
-    {
-        // TODO: Implement remove() method.
-    }
-
-    /**
-     * @param $params
-     * @return mixed
-     */
-    public function search(BaseListForm $params = null)
-    {
-        // TODO: Implement search() method.
+        /** @var UserCreator $form */
+        $form->
+        parent::persist($form);
     }
 }

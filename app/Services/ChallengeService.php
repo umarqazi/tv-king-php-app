@@ -3,13 +3,15 @@
 namespace App\Services;
 
 use App\Forms\BaseListForm;
+use App\Forms\Challenge\CreatorForm;
 use App\Forms\IForm;
 use App\Forms\IListForm;
 use App\Models\Challenge;
+use App\Models\TagChallenge;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\JWTAuth;
 
 /**
  * Class ChallengeService
@@ -19,13 +21,39 @@ use Tymon\JWTAuth\JWTAuth;
 class ChallengeService extends BaseService{
 
     /**
-     * @param $params
-     * @return mixed
+     * @param IForm $form
+     * @return mixed|void
      */
-    public function persist(IForm $request)
+    public function persist(IForm $form)
     {
-        // TODO: Implement persist() method.
+        /** @var $form CreatorForm */
+        $form->validate();
+        $entity = new Challenge();
+        $entity->name = $form->name;
+        $entity->description = $form->description;
+        $entity->location = $form->location;
+        $entity->brand_id = $form->brand_id;
+        $entity->reward = 0;
+        $entity->status = 0;
+        $entity->save();
+
+        $this->attachTags($entity, (array)$form->tags);
+        return $entity;
     }
+
+    /**
+     * @param Challenge $challenge
+     * @param array $tags
+     */
+    private function attachTags($challenge, $tags){
+        foreach ((array)$tags as $idx => $tag_id){
+            $tagChallenge = new TagChallenge();
+            $tagChallenge->challenge_id = $challenge->id;
+            $tagChallenge->tag_id = $tag_id;
+            $tagChallenge->save();
+        }
+    }
+
 
     /**
      * @param $id
@@ -33,7 +61,11 @@ class ChallengeService extends BaseService{
      */
     public function findById($id)
     {
-        // TODO: Implement findById() method.
+        return Challenge::with(['brand'])->find($id);
+        $query = Challenge::query();
+        $query->with(['brand']);
+        $challenge = $query->find($id);
+        return $challenge;
     }
 
     /**
@@ -51,6 +83,8 @@ class ChallengeService extends BaseService{
      */
     public function search(BaseListForm $form = null)
     {
-        // TODO: Implement search() method.
+        $query = Challenge::query();
+        $query->with(['brand']);
+        return $query->paginate(10);
     }
 }

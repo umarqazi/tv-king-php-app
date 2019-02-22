@@ -45,6 +45,12 @@ Route::group(['middleware' => 'jwt.auth'], function () {
 Route::prefix('/brand/v1/')->group(function () {
     Route::post('/signup', '\App\Http\Controllers\Api\Brand\v1\SignupController@register');
     Route::post('/login', '\App\Http\Controllers\Api\Brand\v1\SignupController@login');
+
+
+    Route::post("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@store');
+    Route::get("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@index');
+    Route::get("/challenges/{id}", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@view');
+
 });
 
 //Admin APIs
@@ -55,7 +61,6 @@ Route::prefix('/admin/v1/')->group(function () {
     Route::post("/tags", '\App\Http\Controllers\Api\Admin\v1\TagController@store');
     Route::get("/tags", '\App\Http\Controllers\Api\Admin\v1\TagController@index');
     Route::get("/tags/{id}", '\App\Http\Controllers\Api\Admin\v1\TagController@view');
-
 });
 
 //Customer APIs
