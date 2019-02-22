@@ -22,8 +22,8 @@ class CreateChallengesTable extends Migration
             $table->integer('status');
 
             /*User ID as Foreign Key in Challenges Table*/
-            $table->unsignedInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedInteger('brand_id')->nullable();
+            $table->foreign('brand_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->timestamps();
         });

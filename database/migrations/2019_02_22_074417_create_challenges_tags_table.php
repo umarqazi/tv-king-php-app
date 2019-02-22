@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTricksTable extends Migration
+class CreateChallengesTagsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,16 @@ class CreateTricksTable extends Migration
      */
     public function up()
     {
-        Schema::create('tricks', function (Blueprint $table) {
+        Schema::create('challenges_tags', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('trick');
-            $table->integer('type');
 
-            /*User ID as Foreign Key in Tricks Table*/
-            $table->unsignedInteger('customer_id')->nullable();
-            $table->foreign('customer_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedInteger('tag_id')->nullable();
+            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
 
-            /*Challenge ID as Foreign Key in Tricks Table*/
+            /*Challenge ID as Foreign Key in Tag Table*/
             $table->unsignedInteger('challenge_id')->nullable();
             $table->foreign('challenge_id')->references('id')->on('challenges')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
@@ -36,6 +34,6 @@ class CreateTricksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tricks');
+        Schema::dropIfExists('challenges_tags');
     }
 }

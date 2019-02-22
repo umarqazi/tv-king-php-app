@@ -2,7 +2,12 @@
 
 namespace App\Services;
 
-use App\Repositories\TagRepo;
+use App\Forms\BaseListForm;
+use App\Forms\IListForm;
+use App\Forms\Tag\TagSearchForm;
+use App\Models\Tag;
+use App\Forms\IForm;
+use App\Forms\Tag\CreatorForm;
 
 /**
  * Class TagService
@@ -12,23 +17,35 @@ use App\Repositories\TagRepo;
 class TagService extends BaseService {
 
     /**
-     * @param $params
-     * @return mixed
+     * @param CreatorForm $params
+     * @return \App\Models\Tag
      */
-    public function persist($params)
+    public function persist(IForm $form)
     {
-        // TODO: Implement persist() method.
+        $form->validate();
+
+        $model = new Tag();
+        $model->name = $form->name;
+        $model->save();
+        return $model;
     }
 
     /**
      * @param $id
-     * @return mixed
+     * @return \App\Models\Tag
      */
     public function findById($id)
     {
-        // TODO: Implement findById() method.
+        return Tag::findOrFail($id);
     }
 
+    /**
+     * @param $name
+     */
+    public function findByName($name)
+    {
+
+    }
     /**
      * @param $id
      * @return mixed
@@ -39,11 +56,18 @@ class TagService extends BaseService {
     }
 
     /**
-     * @param $params
-     * @return mixed
+     * @param BaseListForm|null $form
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Pagination\LengthAwarePaginator
      */
-    public function search($params)
+    public function search(BaseListForm $form = null)
     {
-        // TODO: Implement search() method.
+        if($form == null){
+            $form = new TagSearchForm();
+        }
+        $query = Tag::query();
+        if(!empty($form->keyword)){
+            $query->where('name', 'LIKE', '%'.$form->keyword.'%');
+        }
+        return $query->paginate( 40 );
     }
 }

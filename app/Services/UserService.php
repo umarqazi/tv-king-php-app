@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Forms\IForm;
 
 /**
  * Class UserService
@@ -15,7 +16,7 @@ class UserService extends BaseService {
      * @param $params
      * @return mixed
      */
-    public function persist($params)
+    public function persist(IForm $params)
     {
         $entity = new User();
 

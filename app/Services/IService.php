@@ -2,7 +2,11 @@
 
 namespace App\Services;
 
+use App\Forms\BaseListForm;
+use App\Forms\IListForm;
 use App\Http\Requests\UserSignup;
+use App\Forms\IForm;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Interface IService
@@ -12,10 +16,10 @@ use App\Http\Requests\UserSignup;
 interface IService{
 
     /**
-     * @param $params
+     * @param IForm $form
      * @return mixed
      */
-    public function persist($params);
+    public function persist(IForm $form);
 
     /**
      * @param $id
@@ -30,8 +34,8 @@ interface IService{
     public function remove($id);
 
     /**
-     * @param $params
-     * @return mixed
+     * @param IListForm $form
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function search($params);
+    public function search(BaseListForm $form = null);
 }

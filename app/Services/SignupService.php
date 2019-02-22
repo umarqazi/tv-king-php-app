@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Forms\BaseListForm;
 use App\Http\Requests\UserSignup;
 use \App\Models\User;
 use Illuminate\Http\Response;
@@ -344,7 +345,7 @@ class SignupService extends BaseService
      * @param $params
      * @return mixed
      */
-    public function search($params)
+    public function search(BaseListForm $form = null)
     {
 
     }
