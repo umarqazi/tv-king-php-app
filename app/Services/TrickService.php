@@ -36,7 +36,7 @@ class TrickService extends BaseService {
      */
     public function findById($id)
     {
-        // TODO: Implement findById() method.
+        return Trick::query()->find($id);
     }
 
     /**
@@ -54,6 +54,6 @@ class TrickService extends BaseService {
      */
     public function search(BaseListForm $form = null)
     {
-        // TODO: Implement search() method.
+        return Trick::query()->paginate(10);
     }
 }
