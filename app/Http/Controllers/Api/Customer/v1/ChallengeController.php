@@ -29,5 +29,18 @@ class ChallengeController extends Controller
         $this->challengeService = $service;
     }
 
+    public function index(){
 
+    }
+
+    public function view($id){
+
+    }
+
+    /**
+     * @param $challenge_id
+     */
+    public function tricks($challenge_id){
+
+    }
 }
