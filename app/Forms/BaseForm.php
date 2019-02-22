@@ -9,6 +9,7 @@
 namespace App\Forms;
 
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
@@ -52,7 +53,7 @@ abstract class BaseForm implements IForm
      * @return \Illuminate\Contracts\Validation\Validator
      */
     private function getValidator(){
-        $validator = Validator::make($this->getParams(), $this->rules(), $this->errorMessages());
+        $validator = Validator::make($this->toArray(), $this->rules(), $this->errorMessages());
         return $validator;
     }
 

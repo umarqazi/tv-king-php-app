@@ -29,9 +29,11 @@ class TagCreatorForm extends BaseForm
     }
 
     /**
-     * @return array|mixed
+     * Get the instance as an array.
+     *
+     * @return array
      */
-    public function getParams()
+    public function toArray()
     {
         return [
             'name' => $this->name

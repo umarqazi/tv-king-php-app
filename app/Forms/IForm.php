@@ -9,9 +9,10 @@
 namespace App\Forms;
 
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Validation\ValidationException;
 
-interface IForm
+interface IForm extends Arrayable
 {
     /**
      * @return mixed
@@ -33,11 +34,6 @@ interface IForm
      * @throws ValidationException
      */
     public function validate();
-
-    /**
-     * @return mixed
-     */
-    public function getParams();
 
     /**
      *

@@ -8,13 +8,45 @@
 
 namespace App\Services;
 
-class BrandService
+use App\Forms\IForm;
+use App\Forms\IListForm;
+
+class BrandService extends BaseService
 {
 
     /**
-     * @param $request
+     * @param $params
+     * @return mixed
      */
-    public function persist(BrandRequest $request){
+    public function persist(IForm $request)
+    {
+        // TODO: Implement persist() method.
+    }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function findById($id)
+    {
+        // TODO: Implement findById() method.
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function remove($id)
+    {
+        // TODO: Implement remove() method.
+    }
+
+    /**
+     * @param $params
+     * @return mixed
+     */
+    public function search(IListForm $params = null)
+    {
+        // TODO: Implement search() method.
     }
 }

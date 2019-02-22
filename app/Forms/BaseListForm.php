@@ -20,14 +20,17 @@ abstract class BaseListForm extends BaseForm implements IListForm
      */
     public function rules()
     {
-        // TODO: Implement rules() method.
+       return [];
     }
 
+
     /**
-     * @return mixed
+     * @return array|void
      */
-    public function getParams()
+    public function toArray()
     {
-        return [];
+       return [];
     }
+
+
 }

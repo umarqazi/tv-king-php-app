@@ -14,10 +14,10 @@ use App\Forms\IForm;
 interface IService{
 
     /**
-     * @param $params
+     * @param IForm $form
      * @return mixed
      */
-    public function persist(IForm $request);
+    public function persist(IForm $form);
 
     /**
      * @param $id
@@ -32,8 +32,8 @@ interface IService{
     public function remove($id);
 
     /**
-     * @param $params
+     * @param IListForm $form
      * @return mixed
      */
-    public function search(IListForm $params = null);
+    public function search(IListForm $form = null);
 }

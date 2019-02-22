@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Services;
-
-use App\Repositories\TrickRepo;
+use App\Forms\IForm;
+use App\Forms\IListForm;
 
 /**
  * Class TrickService
@@ -12,24 +12,10 @@ use App\Repositories\TrickRepo;
 class TrickService extends BaseService {
 
     /**
-     * @var TrickRepo
-     */
-    protected $trick_repo;
-
-    /**
-     * TrickService constructor.
-     * @param TrickRepo $trick_repo
-     */
-    public function __construct(TrickRepo $trick_repo)
-    {
-        $this->trick_repo = $trick_repo;
-    }
-
-    /**
      * @param $params
      * @return mixed
      */
-    public function persist($params)
+    public function persist(IForm $request)
     {
         // TODO: Implement persist() method.
     }
@@ -56,7 +42,7 @@ class TrickService extends BaseService {
      * @param $params
      * @return mixed
      */
-    public function search($params)
+    public function search(IListForm $params = null)
     {
         // TODO: Implement search() method.
     }

@@ -8,15 +8,29 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+
 
 interface CrudController
 {
 
-    public function create($request);
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function create(Request $request);
 
 
-    public function edit($request);
+    /**
+     * @param $request
+     * @return mixed
+     */
+    public function edit(Request $request);
 
-    public function remove($request);
+    /**
+     * @param $request
+     * @return mixed
+     */
+    public function remove(Request $request);
 
 }

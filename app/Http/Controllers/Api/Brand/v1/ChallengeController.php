@@ -16,11 +16,18 @@ use Illuminate\Http\Request;
 
 class ChallengeController extends Controller
 {
-    protected $challenge_service;
+    /**
+     * @var ChallengeService
+     */
+    protected $challengeService;
 
+    /**
+     * ChallengeController constructor.
+     * @param ChallengeService $challengeService
+     */
     public function __construct(ChallengeService $challengeService)
     {
-        $this->challenge_service = $challengeService;
+        $this->challengeService = $challengeService;
     }
 
     /**
@@ -72,7 +79,8 @@ class ChallengeController extends Controller
      *
      */
     public function store(Request $request){
-        $response =$this->challenge_service->setParams($request->all());
+        $form = new ChallengeCreatorForm();
+        $response =$this->challengeService->persist();
         return $response;
     }
 }
