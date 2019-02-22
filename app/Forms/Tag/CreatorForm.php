@@ -14,7 +14,7 @@ use App\Forms\BaseForm;
  * Class TagCreator
  * @package App\Validators\Tag
  */
-class TagCreatorForm extends BaseForm
+class CreatorForm extends BaseForm
 {
     public $name;
 

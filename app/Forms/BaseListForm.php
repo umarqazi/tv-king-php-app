@@ -14,6 +14,8 @@ namespace App\Forms;
  */
 abstract class BaseListForm extends BaseForm implements IListForm
 {
+    public $page;
+    public $keyword;
 
     /**
      * @return mixed
@@ -29,7 +31,10 @@ abstract class BaseListForm extends BaseForm implements IListForm
      */
     public function toArray()
     {
-       return [];
+       return [
+           'page' => $this->page,
+           'keyword' => $this->keyword
+       ];
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Forms\BaseListForm;
 use App\Forms\IForm;
 use App\Forms\IListForm;
 use App\Models\Challenge;
@@ -48,7 +49,7 @@ class ChallengeService extends BaseService{
      * @param $params
      * @return mixed
      */
-    public function search(IListForm $params = null)
+    public function search(BaseListForm $form = null)
     {
         // TODO: Implement search() method.
     }

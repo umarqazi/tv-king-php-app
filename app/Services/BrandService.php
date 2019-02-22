@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Forms\BaseListForm;
 use App\Forms\IForm;
 use App\Forms\IListForm;
 
@@ -45,7 +46,7 @@ class BrandService extends BaseService
      * @param $params
      * @return mixed
      */
-    public function search(IListForm $params = null)
+    public function search(BaseListForm $params = null)
     {
         // TODO: Implement search() method.
     }

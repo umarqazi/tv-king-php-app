@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Forms\BaseListForm;
 use App\Forms\IListForm;
 use App\Http\Requests\UserSignup;
 use App\Forms\IForm;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Interface IService
@@ -33,7 +35,7 @@ interface IService{
 
     /**
      * @param IListForm $form
-     * @return mixed
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function search(IListForm $form = null);
+    public function search(BaseListForm $form = null);
 }

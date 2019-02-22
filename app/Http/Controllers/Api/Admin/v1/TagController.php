@@ -11,8 +11,10 @@ namespace App\Http\Controllers\Api\Admin\v1;
 
 use App\Forms\Tag\TagSearchForm;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Tag;
+use App\Http\Resources\TagCollection;
 use App\Services\TagService;
-use App\Forms\Tag\TagCreatorForm;
+use App\Forms\Tag\CreatorForm;
 use Illuminate\Http\Request;
 
 class TagController extends Controller
@@ -32,7 +34,7 @@ class TagController extends Controller
      * @param $request
      */
     public function store(Request $request){
-        $form = new TagCreatorForm();
+        $form = new CreatorForm();
         $form->name = $request['name'];
         $savedTag = $this->tagService->persist($form);
         return response()->json(['record' => $savedTag->toArray()]);
@@ -44,8 +46,9 @@ class TagController extends Controller
      */
     public function index(Request $request){
         $form = new TagSearchForm();
+        $form->keyword = $request['keyword'];
         $tags = $this->tagService->search( $form );
-        return response()->json(['m' => $tags]);
+        return new TagCollection($tags);
     }
 
 
@@ -54,9 +57,8 @@ class TagController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function view($id){
-
         $tag = $this->tagService->findById($id);
-        return response()->json(['tag' => $tag]);
-
+        $jsonResource = new Tag($tag);
+        return $jsonResource;
     }
 }

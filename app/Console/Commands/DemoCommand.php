@@ -8,7 +8,7 @@ use App\Services\BrandService;
 use App\Services\ChallengeService;
 use App\Services\SignupService;
 use App\Services\TagService;
-use App\Forms\Tag\TagCreatorForm;
+use App\Forms\Tag\CreatorForm;
 use Faker\Factory;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -49,27 +49,32 @@ class DemoCommand extends Command
      */
     public function handle()
     {
-        $faker = Factory::create();
-        $request = new TagCreatorForm();
-        $request->name = $faker->name;
 
-        if($request->passes()){
-            $service = new TagService();
-            $tag = $service->persist($request);
-            VarDumper::dump("Tag :: {$request->name}, ID :: {$tag->id}");
-        }else{
-            VarDumper::dump('Fail to created Tag');
-           // VarDumper::dump($request->errors());
-        }
+        $this->createTags(50);
 
         try
         {
-            $request = new TagCreatorForm();
+            $request = new CreatorForm();
             $request->name = "";
             $service = new TagService();
             $tag = $service->persist($request);
         }catch (ValidationException $exception){
             VarDumper::dump($exception->errors());
+        }
+    }
+
+    /**
+     * @param int $count
+     */
+    private function createTags($count = 10){
+        $faker = Factory::create();
+
+        for($i = 0; $i< $count; $i++){
+            $request = new CreatorForm();
+            $request->name = $faker->name;
+            $service = new TagService();
+            $tag = $service->persist($request);
+            VarDumper::dump("Tag :: {$request->name}, ID :: {$tag->id}");
         }
     }
 
