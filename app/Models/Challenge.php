@@ -32,7 +32,7 @@ class Challenge extends Model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function tags(){
-       return $this->hasManyThrough(Tag::class, TagChallenge::class, 'challenge_id', 'id');
+       return $this->hasManyThrough(Tag::class, TagChallenge::class, 'challenge_id', 'id', 'id', 'tag_id');
     }
 
     /**
