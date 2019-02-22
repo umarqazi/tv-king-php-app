@@ -12,6 +12,7 @@ use App\Services\IUserType;
 use App\Services\SignupService;
 use App\Services\TagService;
 use App\Forms\Tag\CreatorForm;
+use App\Services\TrickService;
 use Faker\Factory;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -59,16 +60,22 @@ class DemoCommand extends Command
      */
     public function handle()
     {
-        $this->createChallenges(4, 3);
-        //$this->createBrands();
-       //$this->createTags(50);
+        $this->createTags(50);
+        $this->createCustomers();
+        $this->createBrands();
     }
 
     /**
      * @param int $count
      */
-    private function createTags($count = 10){
-        for($i = 0; $i< $count; $i++){
+    private function createTags($maxCount = 10){
+        $count = Tag::query()->count();
+        VarDumper::dump('Tag Count :: ' . $count);
+        if($count > 10){
+            VarDumper::dump('Tag count is good');
+            return;
+        }
+        for($i = 0; $i< $maxCount; $i++){
             $request = new CreatorForm();
             $request->name = $this->faker->name;
             $service = new TagService();
@@ -77,26 +84,56 @@ class DemoCommand extends Command
         }
     }
 
-
-    private function createBrands($count = 3)
-    {
-        $emails = ['fahad.shehzad+b1@gems.techverx.com',
-            'fahad.shehzad+b2@gems.techverx.com',
-            'fahad.shehzad+b3@gems.techverx.com'];
-
+    /**
+     * @param $emailTpls
+     * @param $user_type
+     */
+    private function createUsers($emailTpls, $user_type){
+        foreach ($emailTpls as $idx => $tpl){
+            for($b = 0; $b < $tpl['count']; $b++){
+                $emails[] = strtr( $tpl['email'], [
+                    '{counter}' => $b+1
+                ]);
+            }
+        }
         $faker = Factory::create();
         foreach ($emails as $key => $email) {
+            VarDumper::dump('Creating Brand ' . $email);
             $user = User::where("email", "=", $email)->first();
             if ($user == null) {
                 $user = new User();
                 $user->first_name = $this->faker->firstName;
                 $user->last_name = $this->faker->lastName;
                 $user->email = $email;
-                $user->user_type = IUserType::BRAND;
+                $user->user_type = $user_type;
                 $user->password = Hash::make('abc123');
                 $user->save();
+
+                $this->createChallenges($user->id, 15);
             }
         }
+    }
+
+    private function createBrands($count = 3)
+    {
+        VarDumper::dump('Creating Brands');
+        $emailsTpl = [
+            ['email' => 'fahad.shehzad+b{counter}@gems.techverx.com', 'count' => 10],
+            ['email' => 'fahad.shehzad+b{counter}_19@gems.techverx.com', 'count' => 10],
+            ['email' => 'fahad.shehzad+b{counter}_18@gems.techverx.com', 'count' => 10],
+            ];
+        $this->createUsers($emailsTpl, IUserType::BRAND);
+    }
+
+    private function createCustomers($count = 3)
+    {
+        VarDumper::dump('Creating Customers...');
+        $emailsTpl = [
+            ['email' => 'fahad.shehzad+c{counter}@gems.techverx.com', 'count' => 10],
+            ['email' => 'fahad.shehzad+c{counter}_19@gems.techverx.com', 'count' => 10],
+            ['email' => 'fahad.shehzad+c{counter}_18@gems.techverx.com', 'count' => 10],
+            ];
+        $this->createUsers($emailsTpl, IUserType::CUSTOMER);
     }
 
     /**
@@ -104,15 +141,15 @@ class DemoCommand extends Command
      * @param int $count
      */
     private function createChallenges ($brand_id, $count = 3){
+        VarDumper::dump('Creating Challanges for Brand ' . $brand_id);
         for($i = 0; $i< $count; $i++){
             $this->createChallange($brand_id);
         }
     }
 
     private function random_tags($count = 3){
-        $tags = [];
-        $tags = Tag::all()->pluck('name', 'id');
-        $rand = $this->faker->randomElements(array_keys($tags->toArray()), min($tags->count(), 4));
+        $records = Tag::all()->pluck('name', 'id');
+        $rand = $this->faker->randomElements(array_keys($records->toArray()), min($records->count(), 4));
         return array_combine(array_values($rand), array_values($rand));
     }
 
@@ -133,10 +170,34 @@ class DemoCommand extends Command
 
         if($form->passes()){
             $service = new ChallengeService();
-            $service->persist($form);
+            $challenge = $service->persist($form);
+
+            $customers = $this->randomCustomers(10);
+            foreach ($customers as $idx => $customer_id){
+                $this->submitTrick($customer_id, $challenge->id);
+            }
         }else{
             VarDumper::dump($form->errors());
         }
+    }
+
+    private function randomCustomers($count = 5){
+        $query = User::query();
+        $query->where('user_type', '=', IUserType::CUSTOMER);
+        $records = $query->pluck('id', 'id');
+        $rand = $this->faker->randomElements(array_keys($records->toArray()), min($records->count(), $count));
+        return array_combine(array_values($rand), array_values($rand));
+    }
+
+    private function submitTrick($customer_id, $challenge_id){
+        $form = new \App\Forms\Trick\CreatorForm();
+        $form->challenge_id = $challenge_id;
+        $form->customer_id = $customer_id;
+        $form->description = $this->faker->sentence;
+
+        $service = new TrickService();
+        $service->persist($form);
+
     }
 
 }

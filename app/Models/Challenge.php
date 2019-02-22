@@ -36,6 +36,13 @@ class Challenge extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tricks(){
+        return $this->hasMany(Trick::class, 'challenge_id', 'id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function brand(){

@@ -17,5 +17,6 @@ use App\Forms\BaseListForm;
  */
 class SearchForm extends BaseListForm
 {
+    public $brand_id;
 
 }

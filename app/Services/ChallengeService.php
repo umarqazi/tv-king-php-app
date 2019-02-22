@@ -22,7 +22,7 @@ class ChallengeService extends BaseService{
 
     /**
      * @param IForm $form
-     * @return mixed|void
+     * @return Challenge|mixed
      */
     public function persist(IForm $form)
     {
