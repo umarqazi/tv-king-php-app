@@ -14,7 +14,6 @@ namespace App\Forms;
  */
 abstract class BaseListForm extends BaseForm implements IListForm
 {
-    public $page;
     public $keyword;
 
     /**
@@ -25,6 +24,16 @@ abstract class BaseListForm extends BaseForm implements IListForm
        return [];
     }
 
+    /**
+     * @param $params
+     */
+    public function loadFromArray($params){
+        foreach ($params as $key => $value){
+            if( isset($this->{$key})){
+                $this->$key = $value;
+            }
+        }
+    }
 
     /**
      * @return array|void
