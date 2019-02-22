@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
-use App\Repositories\TagRepo;
+use App\Forms\IListForm;
+use App\Models\Tag;
+use App\Forms\IForm;
+use App\Forms\Tag\TagCreatorForm;
 
 /**
  * Class TagService
@@ -12,23 +15,35 @@ use App\Repositories\TagRepo;
 class TagService extends BaseService {
 
     /**
-     * @param $params
-     * @return mixed
+     * @param TagCreatorForm $params
+     * @return \App\Models\Tag
      */
-    public function persist($params)
+    public function persist(IForm $params)
     {
-        // TODO: Implement persist() method.
+        $params->validate();
+
+        $model = new Tag();
+        $model->name = $params->name;
+        $model->save();
+        return $model;
     }
 
     /**
      * @param $id
-     * @return mixed
+     * @return \App\Models\Tag
      */
     public function findById($id)
     {
-        // TODO: Implement findById() method.
+        return Tag::findOrFail($id);
     }
 
+    /**
+     * @param $name
+     */
+    public function findByName($name)
+    {
+
+    }
     /**
      * @param $id
      * @return mixed
@@ -42,8 +57,8 @@ class TagService extends BaseService {
      * @param $params
      * @return mixed
      */
-    public function search($params)
+    public function search(IListForm $params = null)
     {
-        // TODO: Implement search() method.
+        return Tag::all();
     }
 }

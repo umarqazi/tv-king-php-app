@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Forms\IListForm;
 use App\Http\Requests\UserSignup;
+use App\Forms\IForm;
 
 /**
  * Interface IService
@@ -15,7 +17,7 @@ interface IService{
      * @param $params
      * @return mixed
      */
-    public function persist($params);
+    public function persist(IForm $request);
 
     /**
      * @param $id
@@ -33,5 +35,5 @@ interface IService{
      * @param $params
      * @return mixed
      */
-    public function search($params);
+    public function search(IListForm $params = null);
 }

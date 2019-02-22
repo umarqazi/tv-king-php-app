@@ -44,9 +44,19 @@ class TagController extends Controller
      */
     public function index(Request $request){
         $form = new TagSearchForm();
-
         $tags = $this->tagService->search( $form );
-
         return response()->json(['m' => $tags]);
+    }
+
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function view($id){
+
+        $tag = $this->tagService->findById($id);
+        return response()->json(['tag' => $tag]);
+
     }
 }

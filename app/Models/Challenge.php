@@ -4,6 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Challenge
+ * @package App\Models
+ *
+ * @property \App\Models\User $brand
+ */
 class Challenge extends Model
 {
     /**

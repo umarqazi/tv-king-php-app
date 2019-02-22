@@ -54,6 +54,7 @@ Route::prefix('/admin/v1/')->group(function () {
 
     Route::post("/tags", '\App\Http\Controllers\Api\Admin\v1\TagController@store');
     Route::get("/tags", '\App\Http\Controllers\Api\Admin\v1\TagController@index');
+    Route::get("/tags/{id}", '\App\Http\Controllers\Api\Admin\v1\TagController@view');
 
 });
 
