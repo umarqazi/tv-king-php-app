@@ -19,4 +19,6 @@ class SearchForm extends BaseListForm
 {
     public $brand_id;
 
+    public $tags;
+
 }

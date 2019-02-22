@@ -38,6 +38,13 @@ class TrickController extends Controller
     }
 
     /**
+     * @param $callenge_id
+     */
+    public function store($callenge_id){
+
+    }
+
+    /**
      * @return \Illuminate\Pagination\LengthAwarePaginator|void
      */
     public function index(){

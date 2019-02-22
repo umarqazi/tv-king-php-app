@@ -32,7 +32,7 @@ class Challenge extends Model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function tags(){
-        return $this->belongsToMany('App\Models\Tag')->using('App\Models\TagChallenge');
+       return $this->hasManyThrough(Tag::class, TagChallenge::class, 'challenge_id', 'id');
     }
 
     /**
@@ -46,6 +46,6 @@ class Challenge extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function brand(){
-        return $this->hasOne(User::class, 'id', 'brand_id');
+        return $this->belongsTo(User::class, 'brand_id', 'id');
     }
 }

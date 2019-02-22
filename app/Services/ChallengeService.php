@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Forms\BaseListForm;
 use App\Forms\Challenge\CreatorForm;
+use App\Forms\Challenge\SearchForm;
 use App\Forms\IForm;
 use App\Forms\IListForm;
 use App\Models\Challenge;
@@ -57,11 +58,11 @@ class ChallengeService extends BaseService{
 
     /**
      * @param $id
-     * @return mixed
+     * @return Challenge
      */
     public function findById($id)
     {
-        return Challenge::with(['brand'])->find($id);
+        return Challenge::with(['brand', 'tags'])->find($id);
         $query = Challenge::query();
         $query->with(['brand']);
         $challenge = $query->find($id);
@@ -83,8 +84,12 @@ class ChallengeService extends BaseService{
      */
     public function search(BaseListForm $form = null)
     {
+        /** @var SearchForm $form */
         $query = Challenge::query();
         $query->with(['brand']);
+        if(!empty($form->brand_id)){
+            $query->where('brand_id', '=', $form->brand_id);
+        }
         return $query->paginate(10);
     }
 }

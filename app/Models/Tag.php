@@ -15,4 +15,11 @@ use Illuminate\Database\Eloquent\Model;
 class Tag extends Model
 {
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function challenges(){
+        return $this->hasManyThrough(Challenge::class, TagChallenge::class, 'tag_id', 'challenge_id', 'id', 'challenge_id');
+    }
+
 }
