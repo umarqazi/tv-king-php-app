@@ -66,9 +66,9 @@ class SignupService extends BaseService
         return $response;
     }
 
-    public function persist2(UserSignup $request){
+    /*public function persist2(UserSignup $request){
         return $this->validateRequest($request->all(), $request->rules());
-    }
+    }*/
 
     /**
      * @param $params
@@ -85,11 +85,12 @@ class SignupService extends BaseService
 
         $response = $this->validateRequest($params, $rules);
 
-        /*Set Password Params to null*/
-        $params['password'] = null;
-        $params['password_confirmation'] = null;
-
         if (!$response['status']){
+
+            /*Set Password Params to null*/
+            $params['password'] = null;
+            $params['password_confirmation'] = null;
+
             /*Send Response if Validation Fails*/
             return response([
                 'http-status' => Response::HTTP_UNPROCESSABLE_ENTITY,
@@ -99,6 +100,7 @@ class SignupService extends BaseService
                 'errors' => $response['errors'],
             ],Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
+
             /*Check if User Exists with same Role and Email*/
             $user = $this->user->userExists($params);
             if ($user) {
@@ -117,7 +119,7 @@ class SignupService extends BaseService
                 /*Response for Successful User Creation*/
                 return response([
                     'http-status' => Response::HTTP_OK,
-                    'status' => false,
+                    'status' => true,
                     'message' => 'User Has been Created Successfully!',
                     'body' => $user,
                     'errors' => null,
@@ -143,7 +145,7 @@ class SignupService extends BaseService
         }
     }
 
-    /*public function loginAsAdmin($params){
+    public function loginAsAdmin($params){
         $this->userParams['email']      = $params['email'];
         $this->userParams['password']   = $params['password'];
         $this->userParams['user_type']  = 1;
@@ -165,7 +167,7 @@ class SignupService extends BaseService
         $this->userParams['user_type']  = 3;
         $response =  $this->login($this->userParams);
         return $response;
-    }*/
+    }
 
     /**
      * @param $params
@@ -175,10 +177,12 @@ class SignupService extends BaseService
     {
         $rules = [
             'email'     => 'required|email|max:191',
-            'password'  => 'required'
+            'password'  => 'required',
+            'user_type' => 'required'
         ];
 
         $response = $this->validateRequest($params, $rules);
+
         /*Set Password to null*/
         if (!$response['status']){
             $params['password'] = null;
@@ -192,14 +196,16 @@ class SignupService extends BaseService
             ],Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             $credentials = [
-                'email' => $params['email'],
-                'password' => $params['password']
+                'email'         => $params['email'],
+                'password'      => $params['password'],
+                'user_type'     => $params['user_type'],
             ];
 
             $token = auth()->attempt($credentials);
 
             if (!$token ) {
                 $params['password'] = null;
+
                 /*Send Response if Login Fails*/
                 return response()->json([
                     'http-status' => Response::HTTP_UNAUTHORIZED,
@@ -209,6 +215,7 @@ class SignupService extends BaseService
                 ],Response::HTTP_UNAUTHORIZED);
             }else{
                 $response_token = $this->respondWithToken($token);
+
                 /*Send Response for Successful Login*/
                 return response()->json ([
                     'http-status' => Response::HTTP_OK,
@@ -240,7 +247,7 @@ class SignupService extends BaseService
      */
     public function logout($params)
     {
-        if ($this->auth->authenticate()){
+        if (JWTAuth::authenticate()){
             auth()->logout();
 
             /*Send Response for Successful Logout*/
@@ -270,12 +277,12 @@ class SignupService extends BaseService
 
         $response = $this->validateRequest($params, $rules);
 
-        /*Set Password Params to null*/
-        $params['prev_password'] = null;
-        $params['password'] = null;
-        $params['password_confirmation'] = null;
-
         if (!$response['status']){
+            /*Set Password Params to null*/
+            $params['prev_password'] = null;
+            $params['password'] = null;
+            $params['password_confirmation'] = null;
+
             /*Send Response if Validation Fails*/
             return response([
                 'http-status' => Response::HTTP_UNPROCESSABLE_ENTITY,
@@ -285,7 +292,7 @@ class SignupService extends BaseService
                 'errors' => $response['errors'],
             ],Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
-            $user = $this->auth->authenticate();
+            $user = JWTAuth::authenticate();
 
             if (!Hash::check($params['prev_password'], $user['password'])) {
                 /*Send Response if Previous Password didn't Match*/
@@ -310,7 +317,7 @@ class SignupService extends BaseService
     }
 
     public function updatePassword($params){
-        $user = $this->auth->user();
+        $user = auth()->user();
         $this->user->where('id', $user->id)->update(array('password' => Hash::make($params['password'])));
         return $user;
     }

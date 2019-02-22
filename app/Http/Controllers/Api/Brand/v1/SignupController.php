@@ -14,7 +14,7 @@ use Illuminate\Http\Response;
  * Class SignupController
  * @package App\Http\Controllers\Api\Brand\v1
  *
- * api/brand/v1/signup
+ *
  */
 class SignupController extends Controller
 {
@@ -103,7 +103,7 @@ class SignupController extends Controller
      *
      */
     public function login(Request $request){
-        $response = $this->signup_service->login($request->all());
+        $response = $this->signup_service->loginAsBrand($request->all());
         return $response;
     }
 
@@ -134,9 +134,9 @@ class SignupController extends Controller
 
     /**
      * @SWG\Post(
-     *   path="/brand/v1/password/reset",
-     *   summary="Brand Password Reset",
-     *   operationId="passwordReset",
+     *   path="/brand/v1/change-password",
+     *   summary="Brand Change Password",
+     *   operationId="changePassword",
      *   produces={"application/json"},
      *   tags={"Brand"},
      *   @SWG\Parameter(
@@ -173,7 +173,7 @@ class SignupController extends Controller
      * )
      *
      */
-    public function passwordReset(Request $request){
+    public function changePassword(Request $request){
         $response = $this->signup_service->passwordReset($request->all());
         return $response;
     }

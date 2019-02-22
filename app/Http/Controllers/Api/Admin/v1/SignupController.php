@@ -121,4 +121,50 @@ class SignupController extends Controller
         $response = $this->signup_service->logout($request->all());
         return $response;
     }
+
+    /**
+     * @SWG\Post(
+     *   path="/admin/v1/change-password",
+     *   summary="Admin Change Password",
+     *   operationId="changePassword",
+     *   produces={"application/json"},
+     *   tags={"Admin"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Auth Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="prev_password",
+     *     in="formData",
+     *     description="Previous Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password",
+     *     in="formData",
+     *     description="Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password_confirmation",
+     *     in="formData",
+     *     description="Confirm Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+    public function changePassword(Request $request){
+        $response = $this->signup_service->passwordReset($request->all());
+        return $response;
+    }
 }
