@@ -12,7 +12,7 @@ use App\Forms\IForm;
  * @package App\Services
  * @author Umar Farooq
  */
-class UserService extends BaseService {
+class UserService extends BaseService implements IUserType {
 
 
     /**
