@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+use App\Forms\BaseListForm;
 use App\Forms\IForm;
 use App\Forms\IListForm;
 
@@ -15,7 +16,7 @@ class TrickService extends BaseService {
      * @param $params
      * @return mixed
      */
-    public function persist(IForm $request)
+    public function persist(IForm $form)
     {
         // TODO: Implement persist() method.
     }
@@ -39,10 +40,10 @@ class TrickService extends BaseService {
     }
 
     /**
-     * @param $params
-     * @return mixed
+     * @param BaseListForm|null $form
+     * @return \Illuminate\Pagination\LengthAwarePaginator|void
      */
-    public function search(IListForm $params = null)
+    public function search(BaseListForm $form = null)
     {
         // TODO: Implement search() method.
     }

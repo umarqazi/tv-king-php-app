@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Forms\BaseListForm;
+use App\Forms\IListForm;
 use App\Models\User;
 use App\Forms\IForm;
 
@@ -12,14 +14,14 @@ use App\Forms\IForm;
  */
 class UserService extends BaseService {
 
+
     /**
-     * @param $params
+     * @param IForm $form
      * @return mixed
      */
-    public function persist(IForm $params)
+    public function persist(IForm $form)
     {
-        $entity = new User();
-
+        $form->validate();
         // TODO: Implement persist() method.
     }
 
@@ -42,10 +44,10 @@ class UserService extends BaseService {
     }
 
     /**
-     * @param $params
-     * @return mixed
+     * @param IListForm $form
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function search($params)
+    public function search(BaseListForm $form = null)
     {
         // TODO: Implement search() method.
     }
