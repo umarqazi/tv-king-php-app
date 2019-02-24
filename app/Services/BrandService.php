@@ -15,10 +15,4 @@ use App\Forms\IListForm;
 class BrandService extends UserService
 {
 
-    public function persist(IForm $form)
-    {
-        /** @var UserCreator $form */
-        $form->
-        parent::persist($form);
-    }
 }

@@ -79,10 +79,10 @@ class ChallengeService extends BaseService{
     }
 
     /**
-     * @param $params
-     * @return mixed
+     * @param BaseListForm $form
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Pagination\LengthAwarePaginator
      */
-    public function search(BaseListForm $form = null)
+    public function search(BaseListForm $form)
     {
         /** @var SearchForm $form */
         $query = Challenge::query();

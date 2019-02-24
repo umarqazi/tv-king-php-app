@@ -30,7 +30,7 @@ class SignupService
      * SignupService constructor.
      * @param User $user
      */
-    public function __construct(User $user, JWTAuth $auth)
+    public function __construct(User $user)
     {
         $this->user = $user;
         $this->auth = $auth;
