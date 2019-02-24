@@ -15,15 +15,14 @@ class CreateTricksTable extends Migration
     {
         Schema::create('tricks', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('trick');
-            $table->integer('type');
+            $table->text('description');
 
             /*User ID as Foreign Key in Tricks Table*/
-            $table->unsignedInteger('customer_id')->nullable();
+            $table->unsignedInteger('customer_id');
             $table->foreign('customer_id')->references('id')->on('users')->onDelete('cascade');
 
             /*Challenge ID as Foreign Key in Tricks Table*/
-            $table->unsignedInteger('challenge_id')->nullable();
+            $table->unsignedInteger('challenge_id');
             $table->foreign('challenge_id')->references('id')->on('challenges')->onDelete('cascade');
             $table->timestamps();
         });

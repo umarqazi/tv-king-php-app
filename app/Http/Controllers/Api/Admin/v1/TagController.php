@@ -8,7 +8,6 @@
 
 namespace App\Http\Controllers\Api\Admin\v1;
 
-
 use App\Forms\Tag\TagSearchForm;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Tag;
@@ -17,6 +16,10 @@ use App\Services\TagService;
 use App\Forms\Tag\CreatorForm;
 use Illuminate\Http\Request;
 
+/**
+ * Class TagController
+ * @package App\Http\Controllers\Api\Admin\v1
+ */
 class TagController extends Controller
 {
 

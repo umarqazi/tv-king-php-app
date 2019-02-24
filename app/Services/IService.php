@@ -37,5 +37,5 @@ interface IService{
      * @param IListForm $form
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function search(BaseListForm $form = null);
+    public function search(BaseListForm $form);
 }

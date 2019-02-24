@@ -3,13 +3,16 @@
 namespace App\Services;
 
 use App\Forms\BaseListForm;
+use App\Forms\Challenge\CreatorForm;
+use App\Forms\Challenge\SearchForm;
 use App\Forms\IForm;
 use App\Forms\IListForm;
 use App\Models\Challenge;
+use App\Models\TagChallenge;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\JWTAuth;
 
 /**
  * Class ChallengeService
@@ -19,21 +22,51 @@ use Tymon\JWTAuth\JWTAuth;
 class ChallengeService extends BaseService{
 
     /**
-     * @param $params
-     * @return mixed
+     * @param IForm $form
+     * @return Challenge|mixed
      */
-    public function persist(IForm $request)
+    public function persist(IForm $form)
     {
-        // TODO: Implement persist() method.
+        /** @var $form CreatorForm */
+        $form->validate();
+        $entity = new Challenge();
+        $entity->name = $form->name;
+        $entity->description = $form->description;
+        $entity->location = $form->location;
+        $entity->brand_id = $form->brand_id;
+        $entity->reward = 0;
+        $entity->status = 0;
+        $entity->save();
+
+        $this->attachTags($entity, (array)$form->tags);
+        return $entity;
     }
 
     /**
+     * @param Challenge $challenge
+     * @param array $tags
+     */
+    private function attachTags($challenge, $tags){
+        foreach ((array)$tags as $idx => $tag_id){
+            $tagChallenge = new TagChallenge();
+            $tagChallenge->challenge_id = $challenge->id;
+            $tagChallenge->tag_id = $tag_id;
+            $tagChallenge->save();
+        }
+    }
+
+
+    /**
      * @param $id
-     * @return mixed
+     * @return Challenge
      */
     public function findById($id)
     {
-        // TODO: Implement findById() method.
+        return Challenge::with(['brand', 'tags'])->find($id);
+        $query = Challenge::query();
+        $query->with(['brand']);
+        $challenge = $query->find($id);
+        return $challenge;
     }
 
     /**
@@ -46,11 +79,17 @@ class ChallengeService extends BaseService{
     }
 
     /**
-     * @param $params
-     * @return mixed
+     * @param BaseListForm $form
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Pagination\LengthAwarePaginator
      */
-    public function search(BaseListForm $form = null)
+    public function search(BaseListForm $form)
     {
-        // TODO: Implement search() method.
+        /** @var SearchForm $form */
+        $query = Challenge::query();
+        $query->with(['brand']);
+        if(!empty($form->brand_id)){
+            $query->where('brand_id', '=', $form->brand_id);
+        }
+        return $query->paginate(10);
     }
 }

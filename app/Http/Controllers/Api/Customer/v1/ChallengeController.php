@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Api\Customer\v1;
 
+use App\Forms\Challenge\SearchForm;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CrudController;
 use App\Services\ChallengeService;
@@ -29,5 +30,20 @@ class ChallengeController extends Controller
         $this->challengeService = $service;
     }
 
+    public function index(){
+        $form = new SearchForm();
+        return $this->challengeService->search($form);
+    }
 
+    public function view($id){
+        $challenge = $this->challengeService->findById($id);
+        return $challenge;
+    }
+
+    /**
+     * @param $challenge_id
+     */
+    public function tricks($challenge_id){
+
+    }
 }
