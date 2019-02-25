@@ -20,4 +20,7 @@ class Controller extends BaseController
      *   )
      * )
      */
+    public function currentUser(){
+        return auth()->user()->getAuthIdentifier();
+    }
 }

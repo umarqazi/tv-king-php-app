@@ -31,7 +31,7 @@ class UserService extends BaseService implements IUserType {
      */
     public function findById($id)
     {
-        // TODO: Implement findById() method.
+        return User::query()->findOrFail($id);
     }
 
     /**

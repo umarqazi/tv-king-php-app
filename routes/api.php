@@ -27,6 +27,11 @@ Route::prefix('/admin/v1/')->group(function () {
     Route::post('/login', '\App\Http\Controllers\Api\Admin\v1\LoginController@index');
 
     Route::group(['middleware' =>[ 'jwt.auth', 'admin.authenticator']], function(){
+
+        Route::group(['/profile'], function(){
+            Route::get("", '\App\Http\Controllers\Api\Admin\v1\ProfileController@index');
+        });
+
         Route::post("/tags", '\App\Http\Controllers\Api\Admin\v1\TagController@store');
         Route::get("/tags", '\App\Http\Controllers\Api\Admin\v1\TagController@index');
         Route::get("/tags/{id}", '\App\Http\Controllers\Api\Admin\v1\TagController@view');
@@ -54,6 +59,9 @@ Route::prefix('/brand/v1/')->group(function () {
     Route::post('/login', '\App\Http\Controllers\Api\Brand\v1\LoginController@index');
 
     Route::group(['middleware' =>[ 'jwt.auth','brand.authenticator']], function(){
+
+        Route::get("/profile", '\App\Http\Controllers\Api\Brand\v1\ProfileController@index');
+
         Route::post("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@store');
         Route::get("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@index');
         Route::get("/challenges/{id}", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@view');

@@ -10,6 +10,8 @@ namespace App\Http\Controllers\Api\Brand\v1;
 
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Profile;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 /**
@@ -20,6 +22,22 @@ use Illuminate\Http\Request;
  */
 class ProfileController extends Controller
 {
+    private $userService;
+
+    /**
+     * ProfileController constructor.
+     * @param UserService $service
+     */
+    public function __construct(UserService $service)
+    {
+        $this->userService = $service;
+    }
+
+    public function index(Request $request){
+        $user = $this->userService->findById(  $this->currentUser() );
+        return new Profile( $user );
+    }
+
     /**
      * @param Request $request
      */
