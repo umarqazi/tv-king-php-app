@@ -19,6 +19,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string $profile_image
  * @property \DateTime $created_at
  * @property \DateTime $updated_at
+ * @property \App\Models\Image $profileImage
  */
 class User extends Authenticatable implements JWTSubject
 {
@@ -30,7 +31,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','user_type', 'profile_image'
+        'name', 'email', 'password','user_type'
     ];
 
     /**
@@ -73,5 +74,12 @@ class User extends Authenticatable implements JWTSubject
     public function userExists($params){
        return $this->where('email', $params['email'])->where('user_type' , $params['user_type'])->first();
     }
-    
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function profileImage(){
+        return $this->morphOne('App\Models\Image', 'imageable');
+    }
 }
