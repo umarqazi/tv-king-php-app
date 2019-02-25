@@ -63,6 +63,18 @@ class ChallengeService extends BaseService{
         }
     }
 
+    /**
+     * @param $id
+     * @return Challenge
+     */
+    public function publish($id){
+        $challenge = $this->findById($id);
+        $challenge->published = true;
+        $challenge->save();
+        $challenge->refresh();
+        return $challenge;
+    }
+
 
     /**
      * @param $id
@@ -70,11 +82,7 @@ class ChallengeService extends BaseService{
      */
     public function findById($id)
     {
-        return Challenge::with(['brand', 'tags'])->find($id);
-        $query = Challenge::query();
-        $query->with(['brand']);
-        $challenge = $query->find($id);
-        return $challenge;
+        return Challenge::with(['brand', 'tags'])->findOrFail($id);
     }
 
     /**
@@ -95,9 +103,9 @@ class ChallengeService extends BaseService{
         /** @var SearchForm $form */
         $query = Challenge::query();
         $query->with(['brand']);
-        if(!empty($form->brand_id)){
-            $query->where('brand_id', '=', $form->brand_id);
-        }
+        $query->when($form->brand_id, function($query, $brand_id){
+            $query->where('brand_id', '=', $brand_id);
+        });
         return $query->paginate(10);
     }
 }

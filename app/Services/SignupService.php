@@ -33,7 +33,6 @@ class SignupService
     public function __construct(User $user)
     {
         $this->user = $user;
-        $this->auth = $auth;
     }
 
     public function asAdmin($params){

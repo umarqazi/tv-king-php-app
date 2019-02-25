@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @package App\Models
  *
  * @property integer $id
+ * @property-read string $name
  * @property string $first_name
  * @property string $last_name
  * @property string $email
@@ -60,7 +62,9 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-        return [];
+        return [
+            'user_type' => $this->user_type,
+        ];
     }
 
     /*protected function setKeysForSaveQuery(Builder $query)
@@ -81,5 +85,20 @@ class User extends Authenticatable implements JWTSubject
      */
     public function profileImage(){
         return $this->morphOne('App\Models\Image', 'imageable');
+    }
+
+    /**
+     * @param $password
+     * @return bool
+     */
+    public function verifyPassword($password){
+        return Hash::check($password, $this->getAuthPassword());
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameAttribute(){
+        return ucfirst( strtolower($this->first_name)) . ' ' . ucfirst( strtolower($this->last_name));
     }
 }

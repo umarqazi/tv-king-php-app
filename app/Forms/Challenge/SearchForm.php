@@ -18,7 +18,7 @@ use App\Forms\BaseListForm;
 class SearchForm extends BaseListForm
 {
     public $brand_id;
-
     public $tags;
+    public $published = null;
 
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,63 +14,56 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});*/
+
+//Admin APIs
+Route::prefix('/admin/v1/')->group(function () {
+    /**
+     * Public Routes
+     */
+    Route::post('/signup', '\App\Http\Controllers\Api\Admin\v1\SignupController@register');
+    Route::post('/login', '\App\Http\Controllers\Api\Admin\v1\LoginController@index');
+
+    Route::group(['middleware' =>'admin.authenticator'], function(){
+        Route::post("/tags", '\App\Http\Controllers\Api\Admin\v1\TagController@store');
+        Route::get("/tags", '\App\Http\Controllers\Api\Admin\v1\TagController@index');
+        Route::get("/tags/{id}", '\App\Http\Controllers\Api\Admin\v1\TagController@view');
+    });
 });
 
-Route::group(['middleware' => 'jwt.auth'], function () {
 
-    //Brand APIs
-    Route::prefix('/brand/v1/')->group(function () {
-        Route::post('/challenges', '\App\Http\Controllers\Api\Brand\v1\ChallengeController@store');
-        Route::post('/logout', '\App\Http\Controllers\Api\Brand\v1\SignupController@logout');
-        Route::post('/change-password', '\App\Http\Controllers\Api\Brand\v1\SignupController@changePassword');
-    });
+//Customer APIs
+Route::prefix('/customer/v1/')->group(function () {
+    Route::post('/signup', '\App\Http\Controllers\Api\Customer\v1\SignupController@register');
+    Route::post('/login', '\App\Http\Controllers\Api\Customer\v1\LoginController@index');
 
-    //Admin APIs
-    Route::prefix('/admin/v1/')->group(function () {
-        Route::post('/logout', '\App\Http\Controllers\Api\Admin\v1\SignupController@logout');
-        Route::post('/change-password', '\App\Http\Controllers\Api\Admin\v1\SignupController@changePassword');
 
-    });
-
-    //Customer APIs
-    Route::prefix('/customer/v1/')->group(function () {
-        Route::post('/logout', '\App\Http\Controllers\Api\Customer\v1\SignupController@logout');
-        Route::post('/change-password', '\App\Http\Controllers\Api\Customer\v1\SignupController@changePassword');
-
+    Route::group(['middleware' =>'customer.authenticator'], function(){
+        Route::get("/challenges", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@index');
+        Route::get("/challenges/{id}", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@view');
+        Route::get("/challenges/{'}/tricks", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@tricks');
+        Route::post("/challenges/{challenge_id}/tricks", '\App\Http\Controllers\Api\Customer\v1\TrickController@store');
     });
 });
 
 //Brand APIs
 Route::prefix('/brand/v1/')->group(function () {
     Route::post('/signup', '\App\Http\Controllers\Api\Brand\v1\SignupController@register');
-    Route::post('/login', '\App\Http\Controllers\Api\Brand\v1\SignupController@login');
+    Route::post('/login', '\App\Http\Controllers\Api\Brand\v1\LoginController@index');
 
-
-    Route::post("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@store');
-    Route::get("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@index');
-    Route::get("/challenges/{id}", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@view');
-
+    Route::group(['middleware' =>'brand.authenticator'], function(){
+        Route::post("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@store');
+        Route::get("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@index');
+        Route::get("/challenges/{id}", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@view');
+    });
 });
 
-//Admin APIs
-Route::prefix('/admin/v1/')->group(function () {
-    Route::post('/signup', '\App\Http\Controllers\Api\Admin\v1\SignupController@register');
-    Route::post('/login', '\App\Http\Controllers\Api\Admin\v1\SignupController@login');
 
-    Route::post("/tags", '\App\Http\Controllers\Api\Admin\v1\TagController@store');
-    Route::get("/tags", '\App\Http\Controllers\Api\Admin\v1\TagController@index');
-    Route::get("/tags/{id}", '\App\Http\Controllers\Api\Admin\v1\TagController@view');
-});
-
-//Customer APIs
-Route::prefix('/customer/v1/')->group(function () {
-    Route::post('/signup', '\App\Http\Controllers\Api\Customer\v1\SignupController@register');
-    Route::post('/login', '\App\Http\Controllers\Api\Customer\v1\SignupController@login');
-
-    Route::get("/challenges", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@index');
-    Route::get("/challenges/{id}", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@view');
-    Route::get("/challenges/{'}/tricks", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@tricks');
-    Route::post("/challenges/{challenge_id}/tricks", '\App\Http\Controllers\Api\Customer\v1\TrickController@store');
-});
+/**
+ *
+ */
+Route::fallback(function(Request $request){
+    return response()->json(['message' => 'Route Not Found.', 'route' => $request->getRequestUri()], 404);
+})->name('api.fallback.404');
