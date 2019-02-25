@@ -96,7 +96,8 @@ class ChallengeController extends Controller
 
     public function index(Request $request){
         $form = new SearchForm();
-        $form->brand_id = 2;
-        return $this->challengeService->search( $form );
+        $form->brand_id = auth()->user()->getAuthIdentifier();
+        $search = $this->challengeService->search( $form );
+        return new \App\Http\Resources\ChallengeCollection($search);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
+use Tymon\JWTAuth\JWTAuth;
 
 /**
  * Class BrandAuthenticator
@@ -21,7 +22,7 @@ class BrandAuthenticator extends BaseMiddleware
     public function handle($request, Closure $next)
     {
         try {
-            $user = JWTAuth::parseToken()->authenticate();
+            $user = $this->auth->parseToken()->authenticate();
         } catch (Exception $e) {
             if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
                 return response()->json(['status' => 'Token is Invalid']);
