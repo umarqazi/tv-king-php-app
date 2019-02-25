@@ -90,7 +90,10 @@ class ChallengeController extends Controller
      * @return mixed
      */
     public function view($id){
-        return $this->challengeService->findById($id);
+        $challenge = $this->challengeService->findById($id);
+        $this->authorize('view', $challenge);
+        /** CHeck if provided challenge is owned by this brand */
+        return new \App\Http\Resources\Challenge($challenge);
     }
 
 
