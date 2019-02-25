@@ -2,12 +2,20 @@
 
 namespace App\Http\Middleware;
 
+use App\Helpers\User;
 use App\Services\IUserType;
 use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
 use Tymon\JWTAuth\JWT;
 use Tymon\JWTAuth\JWTAuth;
 
-class CustomerAuthenticator
+/**
+ * Class CustomerAuthenticator
+ * @package App\Http\Middleware
+ */
+class CustomerAuthenticator extends BaseMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,15 +24,12 @@ class CustomerAuthenticator
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        $user = auth()->user();
-        if ($user['user_type'] == IUserType::CUSTOMER) {
+        $user = $this->auth->parseToken()->authenticate();
+        if( User::isCustomer($user) === true){
             return $next($request);
-        } else{
-            /**
-             *
-             */
         }
+        return response()->json(['status' => 'Token is Invalid'], Response::HTTP_UNAUTHORIZED);
     }
 }

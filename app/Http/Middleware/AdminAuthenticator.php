@@ -2,9 +2,16 @@
 
 namespace App\Http\Middleware;
 
+use App\Helpers\User;
 use Closure;
+use Illuminate\Http\Response;
+use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
 
-class AdminAuthenticator
+/**
+ * Class AdminAuthenticator
+ * @package App\Http\Middleware
+ */
+class AdminAuthenticator extends BaseMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,6 +22,10 @@ class AdminAuthenticator
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
+        $user = $this->auth->parseToken()->authenticate();
+        if( User::isAdmin($user) === true){
+            return $next($request);
+        }
+        return response()->json(['status' => 'Token is Invalid'], Response::HTTP_UNAUTHORIZED);
     }
 }
