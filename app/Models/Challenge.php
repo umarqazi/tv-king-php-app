@@ -11,22 +11,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property string $name
  * @property string $description
+ * @property string $address
+ * @property string $city
+ * @property string $state
+ * @property string $country
  * @property string $location
  * @property integer $status
  * @property string $reward
+ * @property string $reward_notes
+ * @property string $reward_url
+ * @property boolean $published
  * @property integer $brand_id
  * @property \App\Models\User $brand
  * @property Tag[] $tags
  */
 class Challenge extends Model
 {
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'description', 'location','status', 'reward', 'brand_id'
-    ];
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -48,4 +48,6 @@ class Challenge extends Model
     public function brand(){
         return $this->belongsTo(User::class, 'brand_id', 'id');
     }
+
+
 }

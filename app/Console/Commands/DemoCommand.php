@@ -163,9 +163,15 @@ class DemoCommand extends Command
         $form->name = $this->faker->dateTime->format("F-Y") . ' Challenge';
         $form->description = $this->faker->sentence;
         $address = $this->faker->address;
-        $form->location = $address;
+        $form->address = $address;
+        $form->city = $this->faker->city;
+        $form->state = $this->faker->state;
+        $form->country = $this->faker->country;
         $form->latitude = $this->faker->latitude;
         $form->longitude = $this->faker->longitude;
+        $form->reward = "Trip to " . $this->faker->city;
+        $form->reward_notes = $this->faker->sentence;
+        $form->reward_url = $this->faker->url;
         $form->tags = $tags;
 
         if($form->passes()){
@@ -177,7 +183,7 @@ class DemoCommand extends Command
                 $this->submitTrick($customer_id, $challenge->id);
             }
         }else{
-            VarDumper::dump($form->errors());
+            dd($form->errors());
         }
     }
 

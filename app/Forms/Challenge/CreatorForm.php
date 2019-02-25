@@ -19,10 +19,17 @@ class CreatorForm extends BaseForm
     public $name;
     public $description;
     public $brand_id;
-    public $location;
+    public $address;
+    public $city;
+    public $state;
+    public $country;
     public $latitude;
     public $longitude;
     public $tags;
+
+    public $reward;
+    public $reward_notes;
+    public $reward_url;
 
     /**
      * @return mixed
@@ -31,7 +38,11 @@ class CreatorForm extends BaseForm
     {
         return [
             'name' => 'required',
-            'brand_id' => 'required|integer'
+            'brand_id' => 'required|integer',
+            'address' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'country' => 'required',
         ];
     }
 
@@ -47,7 +58,10 @@ class CreatorForm extends BaseForm
             'name' => $this->name,
             'description' => $this->description,
             'brand_id'=> $this->brand_id,
-            'location' => $this->location,
+            'address' => $this->address,
+            'city' => $this->city,
+            'state' => $this->state,
+            'country' => $this->country,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'tags' => $this->tags

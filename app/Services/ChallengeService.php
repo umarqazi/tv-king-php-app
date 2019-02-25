@@ -7,9 +7,11 @@ use App\Forms\Challenge\CreatorForm;
 use App\Forms\Challenge\SearchForm;
 use App\Forms\IForm;
 use App\Forms\IListForm;
+use App\Helpers\Util;
 use App\Models\Challenge;
 use App\Models\TagChallenge;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -30,12 +32,18 @@ class ChallengeService extends BaseService{
         /** @var $form CreatorForm */
         $form->validate();
         $entity = new Challenge();
+        $entity->brand_id = $form->brand_id;
         $entity->name = $form->name;
         $entity->description = $form->description;
-        $entity->location = $form->location;
-        $entity->brand_id = $form->brand_id;
-        $entity->reward = 0;
-        $entity->status = 0;
+        $entity->address = $form->address;
+        $entity->city = $form->city;
+        $entity->state = $form->state;
+        $entity->country = $form->country;
+        $entity->location = DB::raw('NULL');
+
+        $entity->reward = Util::get($form->reward, '');
+        $entity->reward_notes = Util::get($form->reward_notes, '');
+        $entity->reward_url = $form->reward_url;
         $entity->save();
 
         $this->attachTags($entity, (array)$form->tags);

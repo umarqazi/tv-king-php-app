@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \App\Models\Challenge $challenge
  * @property \DateTime $created_at
  * @property \DateTime $updated_at
+ * @property Image[] $images
  */
 class Trick extends Model
 {
@@ -33,5 +34,12 @@ class Trick extends Model
      */
     public function challenge(){
         return $this->hasOne(Challenge::class, 'id', 'challenge_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function images(){
+        return $this->hasMany(Image::class, 'imageable');
     }
 }

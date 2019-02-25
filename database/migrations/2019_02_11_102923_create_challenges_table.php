@@ -17,9 +17,15 @@ class CreateChallengesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->text('description');
-            $table->string('location');
-            $table->integer('reward');
-            $table->integer('status');
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('country')->nullable();
+            $table->point('location')->nullable();
+            $table->string('reward');
+            $table->string('reward_notes');
+            $table->string('reward_url');
+            $table->boolean('published')->default(false);
 
             /*User ID as Foreign Key in Challenges Table*/
             $table->unsignedInteger('brand_id')->nullable();
