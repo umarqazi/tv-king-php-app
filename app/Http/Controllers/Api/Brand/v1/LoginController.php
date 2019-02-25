@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\Brand\v1;
 
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 /**
  * Class LoginController
@@ -19,4 +20,11 @@ use App\Http\Controllers\Controller;
 class LoginController extends Controller
 {
 
+    /**
+     * @param Request $request
+     *
+     */
+    public function index(Request $request){
+
+    }
 }
