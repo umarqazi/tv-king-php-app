@@ -14,7 +14,7 @@ class ChallengePolicy
      * Determine whether the user can view the app models challenge.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\AppModelsChallenge  $appModelsChallenge
+     * @param  \App\Models\Challenge  $challenge
      * @return mixed
      */
     public function view(User $user, Challenge $challenge)

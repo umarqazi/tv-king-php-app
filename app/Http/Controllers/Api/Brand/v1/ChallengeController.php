@@ -81,7 +81,7 @@ class ChallengeController extends Controller
      */
     public function store(Request $request){
         $form = new ChallengeCreatorForm();
-        $response =$this->challengeService->persist();
+        $response = $this->challengeService->persist();
         return $response;
     }
 
@@ -93,7 +93,7 @@ class ChallengeController extends Controller
         $challenge = $this->challengeService->findById($id);
         $this->authorize('view', $challenge);
         /** CHeck if provided challenge is owned by this brand */
-        return new \App\Http\Resources\Challenge($challenge);
+        return new \App\Http\Resources\Brand\Challenge($challenge);
     }
 
 
@@ -101,6 +101,6 @@ class ChallengeController extends Controller
         $form = new SearchForm();
         $form->brand_id = auth()->user()->getAuthIdentifier();
         $search = $this->challengeService->search( $form );
-        return new \App\Http\Resources\ChallengeCollection($search);
+        return new \App\Http\Resources\Brand\ChallengeCollection($search);
     }
 }

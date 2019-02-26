@@ -7,6 +7,7 @@ use App\Services\IUserType;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
 use Tymon\JWTAuth\JWT;
 use Tymon\JWTAuth\JWTAuth;
@@ -30,6 +31,6 @@ class CustomerAuthenticator extends BaseMiddleware
         if( User::isCustomer($user) === true){
             return $next($request);
         }
-        return response()->json(['status' => 'Token is Invalid'], Response::HTTP_UNAUTHORIZED);
+        return response()->json(['errors' => ['token' => 'Token is Invalid'] ], Response::HTTP_UNAUTHORIZED);
     }
 }

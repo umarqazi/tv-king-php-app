@@ -46,6 +46,8 @@ Route::prefix('/customer/v1/')->group(function () {
 
 
     Route::group(['middleware' =>[ 'jwt.auth','customer.authenticator']], function(){
+        Route::get("/profile", '\App\Http\Controllers\Api\Customer\v1\ProfileController@index');
+
         Route::post('/forgot-password', '\App\Http\Controllers\Api\Customer\v1\ProfileController@password');
         Route::get("/challenges", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@index');
         Route::get("/challenges/{id}", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@view');
