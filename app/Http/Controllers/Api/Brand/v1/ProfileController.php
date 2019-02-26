@@ -13,6 +13,8 @@ use App\Forms\Auth\PasswordForm;
 use App\Forms\Auth\ProfileImageForm;
 use App\Http\Controllers\Controller;
 use App\Services\ProfileService;
+use App\Http\Resources\Profile;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -26,21 +28,24 @@ use Tymon\JWTAuth\JWTAuth;
  */
 class ProfileController extends Controller
 {
-    /**
-     * @var ProfileService
-     */
+    private $userService;
     private $profileService;
     private $jwtAuth;
 
     /**
      * ProfileController constructor.
-     * @param ProfileService $service
-     * @param JWTAuth $jwt
+     * @param UserService $service
      */
-    public function __construct(ProfileService $service, JWTAuth $jwt)
+    public function __construct(UserService $service, ProfileService $profileService, JWTAuth $jwt)
     {
-        $this->profileService = $service;
+        $this->userService = $service;
+        $this->profileService = $profileService;
         $this->jwtAuth = $jwt;
+    }
+
+    public function index(Request $request){
+        $user = $this->userService->findById(  $this->currentUser() );
+        return new Profile( $user );
     }
 
     /**
