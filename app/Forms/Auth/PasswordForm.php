@@ -10,6 +10,7 @@ namespace App\Forms\Auth;
 
 
 use App\Forms\BaseForm;
+use Illuminate\Support\Facades\Hash;
 
 class PasswordForm extends BaseForm
 {
@@ -40,8 +41,28 @@ class PasswordForm extends BaseForm
     public function rules()
     {
         return [
-            'old_password' => 'required',
+            'old_password' => [
+                'required', function ($attribute, $value, $fail) {
+                    $this->checkOldPassword($attribute, $value, $fail);
+                },
+                ],
             'password' => 'required|min:8|confirmed'
         ];
+       /* return [
+            'old_password' => 'required',
+            'password' => 'required|min:8|confirmed'
+        ];*/
+    }
+
+    /**
+     * @param $attribute
+     * @param $value
+     * @param $fail
+     */
+    public function checkOldPassword($attribute, $value, $fail){
+        $user = auth()->user();
+        if (!Hash::check($value, $user->getAuthPassword())){
+            $fail($attribute.'didn\'t match');
+        }
     }
 }

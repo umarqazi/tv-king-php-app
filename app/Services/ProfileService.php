@@ -8,84 +8,85 @@
 
 namespace App\Services;
 use App\Forms\Auth\PasswordForm;
+use App\Forms\Auth\ProfileForm;
+use App\Forms\Auth\ProfileImageForm;
 use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
+use Intervention\Image\Facades\Image;
 use Tymon\JWTAuth\JWTAuth;
 
 class ProfileService
 {
     /**
-     * @var User
+     * @var UserService
      */
-    private $user;
+    private $userService;
 
     /**
      * ProfileService constructor.
-     * @param User $user
+     * @param UserService $userService
      */
-    public function __construct(User $user)
+    public function __construct(UserService $userService)
     {
-        $this->user = $user;
+        $this->userService = $userService;
     }
 
     /**
      * @param PasswordForm $form
-     * @return User|\Exception|AuthenticationException|\Illuminate\Contracts\Auth\Authenticatable|null
-     */
-    public function asBrand(PasswordForm $form){
-        $form->validate();
-        try{
-            $user = $this->verifyPassword($form->old_password);
-            $this->user->where('id', $user['id'])->update(['password' => Hash::make($form->password)]);
-            return $user;
-        } catch (AuthenticationException $e){
-            return $e;
-        }
-    }
-
-    /**
-     * @param PasswordForm $form
-     * @return User|\Exception|AuthenticationException|\Illuminate\Contracts\Auth\Authenticatable|null
-     */
-    public function asCustomer(PasswordForm $form){
-        $form->validate();
-        try{
-            $user = $this->verifyPassword($form->old_password);
-            $this->user->where('id', $user['id'])->update(['password' => Hash::make($form->password)]);
-            return $user;
-        } catch (AuthenticationException $e){
-            return $e;
-        }
-    }
-
-    /**
-     * @param PasswordForm $form
-     * @return User|\Exception|AuthenticationException|\Illuminate\Contracts\Auth\Authenticatable|null
-     */
-    public function asAdmin(PasswordForm $form){
-        $form->validate();
-        try{
-            $user = $this->verifyPassword($form->old_password);
-            $this->user->where('id', $user['id'])->update(['password' => Hash::make($form->password)]);
-            return $user;
-        } catch (AuthenticationException $e){
-            return $e;
-        }
-    }
-
-    /**
-     * @param $password
      * @return User|\Illuminate\Contracts\Auth\Authenticatable|null
-     * @throws AuthenticationException
+     * @throws ValidationException
      */
-    private function verifyPassword($password){
+    public function password(PasswordForm $form){
+        $form->validate();
         $user = auth()->user();
-        /** @var $user User */
-        $passwordVerified = $user->verifyPassword($password);
-        if(!$passwordVerified){
-            throw new AuthenticationException("Your Password didn't match");
-        }
+        /** @var $user User*/
+        /*if(!$user->verifyPassword($form->old_password)){
+            throw new ValidationException("Your password doesn't match");
+        }*/
+        $user = $this->userService->changePassword($user->getAuthIdentifier(), $form->password);
+        return $user;
+    }
+
+    /**
+     * @param ProfileImageForm $form
+     * @return \App\Models\Image
+     */
+    public function image(ProfileImageForm $form){
+        $form->validate();
+        $user = auth()->user();
+
+        $profile  = Input::file('profile');
+        $file     = $this->uploadImage($profile,$user['id']);
+        $image    = $this->userService->storeImage($file);
+        return $image;
+    }
+
+    /**
+     * @param $data
+     * @param $user_id
+     * @return array
+     */
+    public function uploadImage($data, $user_id){
+        $fileName   = $data->getClientOriginalName();
+
+        $img = Image::make($data->getRealPath());
+        $img->resize(120, 120, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $img->stream();
+        $filePath='images/'.$user_id.'/profile_image/'.$fileName;
+        Storage::disk('public')->put($filePath, $img);
+        return array('path' => $filePath, 'name' => $fileName);
+    }
+
+    public function profile(ProfileForm $form){
+        $form->validate();
+        $user = auth()->user();
+        $user = $this->userService->updateProfile($user['id'],$form);
         return $user;
     }
 }

@@ -40,6 +40,7 @@ class ChallengeService extends BaseService{
         $entity->state = $form->state;
         $entity->country = $form->country;
         $entity->location = DB::raw('NULL');
+        $entity->published = false;
 
         $entity->reward = Util::get($form->reward, '');
         $entity->reward_notes = Util::get($form->reward_notes, '');
