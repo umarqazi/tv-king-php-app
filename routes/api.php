@@ -27,6 +27,7 @@ Route::prefix('/admin/v1/')->group(function () {
     Route::post('/login', '\App\Http\Controllers\Api\Admin\v1\LoginController@index');
 
     Route::group(['middleware' =>[ 'jwt.auth', 'admin.authenticator']], function(){
+        Route::post('/forgot-password', '\App\Http\Controllers\Api\Admin\v1\ProfileController@password');
         Route::post("/tags", '\App\Http\Controllers\Api\Admin\v1\TagController@store');
         Route::get("/tags", '\App\Http\Controllers\Api\Admin\v1\TagController@index');
         Route::get("/tags/{id}", '\App\Http\Controllers\Api\Admin\v1\TagController@view');
@@ -40,7 +41,8 @@ Route::prefix('/customer/v1/')->group(function () {
     Route::post('/login', '\App\Http\Controllers\Api\Customer\v1\LoginController@index');
 
 
-    Route::group(['middleware' =>'customer.authenticator'], function(){
+    Route::group(['middleware' =>[ 'jwt.auth','customer.authenticator']], function(){
+        Route::post('/forgot-password', '\App\Http\Controllers\Api\Customer\v1\ProfileController@password');
         Route::get("/challenges", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@index');
         Route::get("/challenges/{id}", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@view');
         Route::get("/challenges/{'}/tricks", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@tricks');
@@ -54,6 +56,8 @@ Route::prefix('/brand/v1/')->group(function () {
     Route::post('/login', '\App\Http\Controllers\Api\Brand\v1\LoginController@index');
 
     Route::group(['middleware' =>[ 'jwt.auth','brand.authenticator']], function(){
+        Route::post('/forgot-password', '\App\Http\Controllers\Api\Brand\v1\ProfileController@password');
+        Route::post('/profile', '\App\Http\Controllers\Api\Brand\v1\ProfileController@image');
         Route::post("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@store');
         Route::get("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@index');
         Route::get("/challenges/{id}", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@view');

@@ -9,8 +9,14 @@
 namespace App\Http\Controllers\Api\Brand\v1;
 
 
+use App\Forms\Auth\PasswordForm;
+use App\Forms\Auth\ProfileImageForm;
 use App\Http\Controllers\Controller;
+use App\Services\ProfileService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+use Tymon\JWTAuth\JWTAuth;
 
 /**
  * Class ProfileController
@@ -21,17 +27,39 @@ use Illuminate\Http\Request;
 class ProfileController extends Controller
 {
     /**
-     * @param Request $request
+     * @var ProfileService
      */
-    public function password(Request $request){
+    private $profileService;
+    private $jwtAuth;
 
+    /**
+     * ProfileController constructor.
+     * @param ProfileService $service
+     * @param JWTAuth $jwt
+     */
+    public function __construct(ProfileService $service, JWTAuth $jwt)
+    {
+        $this->profileService = $service;
+        $this->jwtAuth = $jwt;
     }
 
     /**
      * @param Request $request
+     * @return \App\Models\User|\Exception|\Illuminate\Auth\AuthenticationException|\Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function image(Request $request){
+    public function password(Request $request){
+        $form = new PasswordForm();
+        $form->old_password             = $request['old_password'];
+        $form->password                 = $request['password'];
+        $form->password_confirmation    = $request['password_confirmation'];
+        $user = $this->profileService->asBrand($form);
+        return $user;
+    }
 
+    public function image(Request $request){
+        $form = new ProfileImageForm();
+        $form->profile = $request['profile'];
+//        $user = $this->profileService->
     }
 
     /**

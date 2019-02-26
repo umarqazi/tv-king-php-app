@@ -12,7 +12,6 @@ namespace App\Services;
 use App\Forms\Auth\LoginForm;
 use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Tymon\JWTAuth\JWTAuth;
 
 /**
@@ -53,6 +52,8 @@ class AuthenticationService
 
     /**
      * @param LoginForm $form
+     * @return User
+     * @throws AuthenticationException
      */
     public function asCustomer(LoginForm $form){
         $form->validate();
@@ -62,6 +63,8 @@ class AuthenticationService
 
     /**
      * @param LoginForm $form
+     * @return User
+     * @throws AuthenticationException
      */
     public function asAdmin(LoginForm $form){
         $form->validate();
@@ -91,6 +94,4 @@ class AuthenticationService
         }
         return $user;
     }
-
-
 }
