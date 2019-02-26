@@ -11,13 +11,9 @@ use App\Forms\Auth\PasswordForm;
 use App\Forms\Auth\ProfileForm;
 use App\Forms\Auth\ProfileImageForm;
 use App\Models\User;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\ValidationException;
 use Intervention\Image\Facades\Image;
-use Tymon\JWTAuth\JWTAuth;
 
 class ProfileService
 {
@@ -38,15 +34,11 @@ class ProfileService
     /**
      * @param PasswordForm $form
      * @return User|\Illuminate\Contracts\Auth\Authenticatable|null
-     * @throws ValidationException
      */
     public function password(PasswordForm $form){
         $form->validate();
         $user = auth()->user();
         /** @var $user User*/
-        /*if(!$user->verifyPassword($form->old_password)){
-            throw new ValidationException("Your password doesn't match");
-        }*/
         $user = $this->userService->changePassword($user->getAuthIdentifier(), $form->password);
         return $user;
     }
@@ -83,6 +75,10 @@ class ProfileService
         return array('path' => $filePath, 'name' => $fileName);
     }
 
+    /**
+     * @param ProfileForm $form
+     * @return User|\Illuminate\Contracts\Auth\Authenticatable|null
+     */
     public function profile(ProfileForm $form){
         $form->validate();
         $user = auth()->user();

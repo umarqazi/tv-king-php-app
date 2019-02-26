@@ -46,7 +46,6 @@ class ProfileController extends Controller
     /**
      * @param Request $request
      * @return \App\Models\User|\Illuminate\Contracts\Auth\Authenticatable|null
-     * @throws \Illuminate\Validation\ValidationException
      */
     public function password(Request $request){
         $form = new PasswordForm();

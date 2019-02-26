@@ -45,13 +45,9 @@ class PasswordForm extends BaseForm
                 'required', function ($attribute, $value, $fail) {
                     $this->checkOldPassword($attribute, $value, $fail);
                 },
-                ],
+            ],
             'password' => 'required|min:8|confirmed'
         ];
-       /* return [
-            'old_password' => 'required',
-            'password' => 'required|min:8|confirmed'
-        ];*/
     }
 
     /**
@@ -62,7 +58,7 @@ class PasswordForm extends BaseForm
     public function checkOldPassword($attribute, $value, $fail){
         $user = auth()->user();
         if (!Hash::check($value, $user->getAuthPassword())){
-            $fail($attribute.'didn\'t match');
+            $fail('Old password didn\'t match');
         }
     }
 }

@@ -52,7 +52,7 @@ Route::prefix('/customer/v1/')->group(function () {
         Route::post('/profile/password', '\App\Http\Controllers\Api\Customer\v1\ProfileController@password');
         Route::post('/profile/image', '\App\Http\Controllers\Api\Customer\v1\ProfileController@image');
 
-        
+
         Route::get("/challenges", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@index');
         Route::get("/challenges/{id}", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@view');
         Route::get("/challenges/{'}/tricks", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@tricks');

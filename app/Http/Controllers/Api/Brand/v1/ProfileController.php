@@ -17,10 +17,6 @@ use App\Services\ProfileService;
 use App\Http\Resources\Profile;
 use App\Services\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
-use Intervention\Image\Facades\Image;
 use Tymon\JWTAuth\JWTAuth;
 
 /**
@@ -57,8 +53,7 @@ class ProfileController extends Controller
 
     /**
      * @param Request $request
-     * @return \App\Models\User|\Exception|\Illuminate\Auth\AuthenticationException|\Illuminate\Contracts\Auth\Authenticatable|null
-     * @throws ValidationException
+     * @return \App\Models\User|\Illuminate\Contracts\Auth\Authenticatable|null
      */
     public function password(Request $request){
         $form = new PasswordForm();
