@@ -27,6 +27,6 @@ class BrandAuthenticator extends BaseMiddleware
         if (User::isBrand($user) === true) {
             return $next($request);
         }
-        return response()->json(['status' => 'Token is Invalid'], Response::HTTP_UNAUTHORIZED);
+        return response()->json(['errors' => ['token' => 'Token is Invalid'] ], Response::HTTP_UNAUTHORIZED);
     }
 }
