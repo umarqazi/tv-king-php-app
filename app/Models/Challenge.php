@@ -24,6 +24,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $brand_id
  * @property \App\Models\User $brand
  * @property Tag[] $tags
+ * @property Trick $winner
+ * @property integer $winner_id
+ * @property boolean hasWinner
  */
 class Challenge extends Model
 {
@@ -49,5 +52,17 @@ class Challenge extends Model
         return $this->belongsTo(User::class, 'brand_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function winner(){
+        return $this->hasOne(Trick::class, 'id', 'winner_id');
+    }
 
+    /**
+     * @return bool
+     */
+    public function getHasWinnerAttribute(){
+        return !blank($this->winner_id);
+    }
 }

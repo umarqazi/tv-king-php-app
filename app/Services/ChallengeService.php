@@ -125,4 +125,13 @@ class ChallengeService extends BaseService{
         return Trick::query()->where(['customer_id' => $customer_id, 'challenge_id' => $challenge_id])->exists();
     }
 
+    /**
+     * @param integer $challenge_id
+     * @param integer $trick_id
+     */
+    public function winner($challenge_id, $trick_id){
+        $challenge = $this->findById($challenge_id);
+        $challenge->winner_id = $trick_id;
+        $challenge->save();
+    }
 }

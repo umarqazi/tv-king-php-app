@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Forms\Auth\ProfileForm;
 use App\Http\Requests\ChallengeRequest;
 use App\Http\Requests\UserSignup;
 use App\Models\Tag;
@@ -9,13 +10,16 @@ use App\Models\User;
 use App\Services\BrandService;
 use App\Services\ChallengeService;
 use App\Services\IUserType;
+use App\Services\ProfileService;
 use App\Services\SignupService;
 use App\Services\TagService;
 use App\Forms\Tag\CreatorForm;
 use App\Services\TrickService;
+use App\Services\UserService;
 use Faker\Factory;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -43,6 +47,16 @@ class DemoCommand extends Command
     private $faker;
 
     /**
+     * @var ProfileService
+     */
+    private $profileService;
+
+    /**
+     * @var UserService
+     */
+    private $userService;
+
+    /**
      * Create a new command instance.
      *
      * @return void
@@ -51,6 +65,8 @@ class DemoCommand extends Command
     {
         parent::__construct();
         $this->faker = Factory::create();
+        $this->profileService = App::make(ProfileService::class);
+        $this->userService = App::make(UserService::class);
     }
 
     /**
@@ -62,6 +78,8 @@ class DemoCommand extends Command
     {
         $this->createTags(50);
         $this->createCustomers();
+        //$customer = $this->randomCustomers(1);
+        //$this->verifyProfile(Arr::first($customer)));
         $this->createBrands();
     }
 
@@ -111,6 +129,24 @@ class DemoCommand extends Command
 
                 $this->createChallenges($user->id, 15);
             }
+        }
+    }
+
+    /**
+     * @param $user_id
+     * @throws \Exception
+     */
+    private function verifyProfile($user_id)
+    {
+        $profileForm = new ProfileForm();
+        $profileForm->first_name = $this->faker->firstName;
+        $profileForm->last_name = $this->faker->lastName;
+        $profileForm->user_id = $user_id;
+        $this->profileService->profile($profileForm);
+
+        $profileUser = $this->userService->findById($user_id);
+        if($profileForm->first_name !== $profileUser->first_name){
+            throw new \Exception("Updating profile functionality not working.");
         }
     }
 

@@ -11,6 +11,10 @@ namespace App\Services;
 
 use App\Models\Image;
 
+/**
+ * Class ImageUploadService
+ * @package App\Services
+ */
 class ImageUploadService
 {
     private $user;
@@ -20,6 +24,11 @@ class ImageUploadService
         $this->user  = $userService;
     }
 
+    /**
+     * @param $profile
+     * @param $user_id
+     * @return Image
+     */
     public function uploadProfile($profile, $user_id){
         $file = $this->uploadImages($profile, $user_id);
         $image = $this->storeImage($file, $user_id);
@@ -36,8 +45,8 @@ class ImageUploadService
         $image->storage_path = 'storage/images/profiles/'.$user['id'].'/';
         $image->data         = json_encode($file['path']);
         $image->name         = $file['name'];
-
         $user->profileImage()->save($image);
+
         return $image;
     }
 

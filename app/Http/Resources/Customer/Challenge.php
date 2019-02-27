@@ -51,7 +51,7 @@ class Challenge extends JsonResource implements IResource
             'created_at' => $this->created_at->format('M/d/Y'),
             'customer_id' => auth()->id(),
             'has_trick' => $this->challengeService->hasTrick(auth()->id(), $this->id),
-            'has_winner' => false,
+            'has_winner' => $this->hasWinner,
             'trick_count' => $this->tricks->count()
         ];
     }
