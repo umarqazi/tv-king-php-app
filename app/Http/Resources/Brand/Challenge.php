@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources\Brand;
 
+use App\Http\Resources\IResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Challenge extends JsonResource
+class Challenge extends JsonResource implements IResource
 {
     /**
      * Transform the resource into an array.
@@ -14,9 +15,18 @@ class Challenge extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'id' => $this->id,
-            'title' => $this->title
-        ];
+        $mapped = $this->forList($request);
+        return $mapped;
+    }
+
+    /**
+     * @param $request
+     * @return mixed
+     */
+    public function forList($request)
+    {
+       return [
+        'id', 'title'
+       ];
     }
 }
