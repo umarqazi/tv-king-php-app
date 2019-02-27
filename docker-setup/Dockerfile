@@ -4,7 +4,7 @@ RUN mkdir -p /var/www/tv-king
 WORKDIR /var/www/tv-king
 
 RUN apt-get update \
-	&& apt-get install -y git libmcrypt-dev libfreetype6-dev libxslt-dev \
+	&& apt-get install -y vim git libmcrypt-dev libfreetype6-dev libxslt-dev \
 	libjpeg62-turbo-dev \
 	libpng-dev unzip zip \
 	&& rm -rf /var/lib/apt/lists/* \
@@ -25,6 +25,8 @@ RUN /usr/local/bin/composer install --no-dev
 
 COPY docker-setup/docker.env .env
 
-RUN a2enmod rewrite headers expires
+RUN chmod 0777 /var/www/tv-king -R
+
+RUN a2enmod rewrite headers expires negotiation
 RUN service apache2 restart
 

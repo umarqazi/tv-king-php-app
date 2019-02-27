@@ -38,9 +38,8 @@ services:
     links:
       - tv_king_mysql:db
     volumes:
-      - ./apache2.conf:/etc/apache2/sites-enabled/000-default.conf
-      - ./data-dir/logs:/var/log/apache
-      - ./data-dir/storage:/var/www/tv-king/storage
+      - ./apache2.conf:/etc/apache2/sites-available/000-default.conf
+      - ./data-dir/logs:/var/log/apache2
     ports:
       - "80:80"
     environment:
