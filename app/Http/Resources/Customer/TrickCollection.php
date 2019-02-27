@@ -14,6 +14,10 @@ class TrickCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'data' => $this->collection->transform( function(Trick $trick) use ($request){
+               return  $trick->forList($request);
+            })
+        ];
     }
 }

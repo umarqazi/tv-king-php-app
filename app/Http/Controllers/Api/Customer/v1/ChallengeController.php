@@ -10,10 +10,11 @@ namespace App\Http\Controllers\Api\Customer\v1;
 
 use App\Forms\Challenge\SearchForm;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\CrudController;
 use App\Http\Resources\Customer\Challenge;
 use App\Http\Resources\Customer\ChallengeCollection;
+use App\Http\Resources\Customer\TrickCollection;
 use App\Services\ChallengeService;
+use App\Services\TrickService;
 
 /**
  * Class ChallengesController
@@ -26,10 +27,15 @@ class ChallengeController extends Controller
      */
     private $challengeService;
 
+    /**
+     * @var TrickService
+     */
+    private $trickService;
 
-    public function __construct(ChallengeService $service)
+    public function __construct(ChallengeService $service, TrickService $trickService)
     {
         $this->challengeService = $service;
+        $this->trickService = $trickService;
     }
 
     /**
@@ -57,6 +63,9 @@ class ChallengeController extends Controller
      * @param $challenge_id
      */
     public function tricks($challenge_id){
-
+        $form = new \App\Forms\Trick\SearchForm();
+        $form->challenge_id = $challenge_id;
+        $tricks = $this->trickService->search($form);
+        return new TrickCollection($tricks);
     }
 }

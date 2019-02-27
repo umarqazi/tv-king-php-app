@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
  * Class Challenge
@@ -25,8 +26,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property \App\Models\User $brand
  * @property Tag[] $tags
  * @property Trick $winner
+ * @property Collection $tricks
  * @property integer $winner_id
- * @property integer $winner_notes
+ * @property string $winner_notes
+ * @property \DateTime $winner_at
  * @property boolean hasWinner
  */
 class Challenge extends Model

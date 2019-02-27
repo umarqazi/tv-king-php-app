@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Forms\Auth\ProfileForm;
+use App\Forms\Challenge\WinnerForm;
 use App\Http\Requests\ChallengeRequest;
 use App\Http\Requests\UserSignup;
 use App\Models\Tag;
@@ -219,6 +220,17 @@ class DemoCommand extends Command
             foreach ($customers as $idx => $customer_id){
                 $this->submitTrick($customer_id, $challenge->id);
             }
+            $challenge->refresh();
+            $tricks = Arr::shuffle($challenge->tricks->pluck('id', 'id')->toArray());
+
+            $winnerTrick = Arr::random($tricks, 1);
+            $winnerForm = new WinnerForm();
+            $winnerForm->challenge_id = $challenge->id;
+            $winnerForm->trick_id = $winnerTrick[0];
+            $winnerForm->notes = $this->faker->sentence;
+            $trickChallenge = $service->winner($winnerForm);
+
+            VarDumper::dump('Verifiing Winner :: ' . $trickChallenge->winner->id . ' == ' . $winnerTrick[0]);
         }else{
             dd($form->errors());
         }

@@ -2,8 +2,11 @@
 
 namespace App\Http\Resources\Customer;
 
+use App\Forms\Trick\SearchForm;
 use App\Http\Resources\IResource;
 use App\Services\ChallengeService;
+use App\Services\TrickService;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\App;
 
@@ -14,12 +17,20 @@ use Illuminate\Support\Facades\App;
 class Challenge extends JsonResource implements IResource
 {
 
+    /**
+     * @var ChallengeService
+     */
     private $challengeService;
+    /**
+     * @var TrickService
+     */
+    private $trickService;
 
     public function __construct($resource)
     {
         parent::__construct($resource);
         $this->challengeService = App::make(ChallengeService::class);
+        $this->trickService = App::make(TrickService::class);
     }
 
     /**
@@ -30,7 +41,11 @@ class Challenge extends JsonResource implements IResource
      */
     public function toArray($request)
     {
-        return $this->forList($request);
+        $mapped = $this->forList($request);
+        $form = new SearchForm();
+        $form->challenge_id = $this->id;
+        $mapped['tricks'] = $this->trickService->search($form);
+        return $mapped;
     }
 
     /**
@@ -49,10 +64,12 @@ class Challenge extends JsonResource implements IResource
                 'logitude' => ''
             ],
             'created_at' => $this->created_at->format('M/d/Y'),
+            'created_ago' => Carbon::parse($this->created_at)->diffForHumans(),
             'customer_id' => auth()->id(),
             'has_trick' => $this->challengeService->hasTrick(auth()->id(), $this->id),
             'has_winner' => $this->hasWinner,
-            'trick_count' => $this->tricks->count()
+            'trick_count' => $this->tricks->count(),
+            'winner' => new Trick($this->winner)
         ];
     }
 }
