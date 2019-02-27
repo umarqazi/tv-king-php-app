@@ -25,7 +25,6 @@ class ProfileService
     /**
      * ProfileService constructor.
      * @param UserService $userService
-     * @param ImageUploadService $imageUploadService
      */
     public function __construct(UserService $userService)
     {
