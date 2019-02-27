@@ -14,6 +14,7 @@ use App\Forms\BaseForm;
 class ProfileImageForm extends BaseForm
 {
     public $profile;
+    public $user_id;
 
     /**
      * Get the instance as an array.
@@ -23,7 +24,8 @@ class ProfileImageForm extends BaseForm
     public function toArray()
     {
         return[
-            'profile' => $this->profile
+            'profile' => $this->profile,
+            'user_id' => $this->user_id
         ];
     }
 
@@ -33,7 +35,8 @@ class ProfileImageForm extends BaseForm
     public function rules()
     {
         return [
-          'profile' => 'required'
+          'profile' => 'image|required|mimes:jpeg,png,jpg,gif',
+          'user_id' => 'required'
         ];
     }
 }

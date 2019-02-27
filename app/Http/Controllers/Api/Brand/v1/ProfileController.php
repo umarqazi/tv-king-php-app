@@ -71,6 +71,7 @@ class ProfileController extends Controller
     public function image(Request $request){
         $form = new ProfileImageForm();
         $form->profile = $request['profile'];
+        $form->user_id = $this->currentUser();
         $user = $this->profileService->image($form);
         return $user;
     }
@@ -83,6 +84,7 @@ class ProfileController extends Controller
         $form = new ProfileForm();
         $form->first_name = $request['first_name'];
         $form->last_name  = $request['last_name'];
+        $form->user_id    = $this->currentUser();
         $user = $this->profileService->profile($form);
         return $user;
     }

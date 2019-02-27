@@ -14,6 +14,12 @@ class Image extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'original' => url($this->storage_path).'/'.$this->name,
+            'small' => url($this->storage_path).'/small/'.$this->name,
+            'medium' => url($this->storage_path).'/medium/'.$this->name,
+            'large' => url($this->storage_path).'/large/'.$this->name
+        ];
+        //return parent::toArray($request);
     }
 }

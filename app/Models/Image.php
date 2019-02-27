@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property integer $id
  * @property string $storage_path
+ * @property string $data
  * @property string $name
  * @property integer imageable_id
  * @property string imageable_type

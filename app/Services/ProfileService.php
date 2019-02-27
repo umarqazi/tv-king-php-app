@@ -21,14 +21,17 @@ class ProfileService
      * @var UserService
      */
     private $userService;
+    private $imageUploadService;
 
     /**
      * ProfileService constructor.
      * @param UserService $userService
+     * @param ImageUploadService $imageUploadService
      */
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, ImageUploadService $imageUploadService)
     {
         $this->userService = $userService;
+        $this->imageUploadService = $imageUploadService;
     }
 
     /**
@@ -49,40 +52,18 @@ class ProfileService
      */
     public function image(ProfileImageForm $form){
         $form->validate();
-        $user = auth()->user();
-
         $profile  = Input::file('profile');
-        $file     = $this->uploadImage($profile,$user['id']);
-        $image    = $this->userService->storeImage($file);
+        $image    = $this->imageUploadService->uploadProfile($profile, $form->user_id);
         return $image;
     }
 
     /**
-     * @param $data
-     * @param $user_id
-     * @return array
-     */
-    public function uploadImage($data, $user_id){
-        $fileName   = $data->getClientOriginalName();
-
-        $img = Image::make($data->getRealPath());
-        $img->resize(120, 120, function ($constraint) {
-            $constraint->aspectRatio();
-        });
-        $img->stream();
-        $filePath='images/'.$user_id.'/profile_image/'.$fileName;
-        Storage::disk('public')->put($filePath, $img);
-        return array('path' => $filePath, 'name' => $fileName);
-    }
-
-    /**
      * @param ProfileForm $form
-     * @return User|\Illuminate\Contracts\Auth\Authenticatable|null
+     * @return User
      */
     public function profile(ProfileForm $form){
         $form->validate();
-        $user = auth()->user();
-        $user = $this->userService->updateProfile($user['id'],$form);
+        $user = $this->userService->updateProfile($form->user_id,$form);
         return $user;
     }
 }
