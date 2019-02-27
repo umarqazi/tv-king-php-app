@@ -27,8 +27,8 @@ class ChallengeCollection extends ResourceCollection
                     'reward_notes' => $challenge->reward_notes,
                     'reward_url' => $challenge->reward_url,
                     'published' => $challenge->published,
-                    'trick_count' => $challenge->tricks->count()
-
+                    'trick_count' => $challenge->tricks->count(),
+                    'has_winner' => false
                 ];
             })
         ];
