@@ -21,17 +21,15 @@ class ProfileService
      * @var UserService
      */
     private $userService;
-    private $imageUploadService;
 
     /**
      * ProfileService constructor.
      * @param UserService $userService
      * @param ImageUploadService $imageUploadService
      */
-    public function __construct(UserService $userService, ImageUploadService $imageUploadService)
+    public function __construct(UserService $userService)
     {
         $this->userService = $userService;
-        $this->imageUploadService = $imageUploadService;
     }
 
     /**
@@ -53,8 +51,52 @@ class ProfileService
     public function image(ProfileImageForm $form){
         $form->validate();
         $profile  = Input::file('profile');
-        $image    = $this->imageUploadService->uploadProfile($profile, $form->user_id);
+        $file     = $this->uploadImages($profile,$form->user_id);
+        $image    = $this->userService->storeImage($file,$form->user_id );
         return $image;
+    }
+
+    /**
+     * @param $data
+     * @param $user_id
+     * @return array
+     */
+    public function uploadImages($data, $user_id){
+        $fileName   = $data->getClientOriginalName();
+        $ext        = $data->getClientOriginalExtension();
+        $filePath   = 'images/profiles/'.$user_id.'/';
+        $img = Image::make($data->getRealPath());
+
+        // Save Image In Original Size
+        $img->stream();
+        Storage::disk('public')->put($filePath.$fileName, $img);
+
+        // Save Small Image
+        $img->resize(120, 120, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $img->stream();
+        $smallFilePath = $filePath.'small/'.$fileName;
+        Storage::disk('public')->put($smallFilePath, $img);
+
+        // Save Medium Image
+        $img->resize(240, 180, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $img->stream();
+        $mediumFilePath = $filePath.'medium/'.$fileName;
+        Storage::disk('public')->put($mediumFilePath, $img);
+
+        // Save Large Image
+        $img->resize(480, 360, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $img->stream();
+        $largeFilePath = $filePath.'large/'.$fileName;
+        Storage::disk('public')->put($largeFilePath, $img);
+
+        $path = array('small' => $smallFilePath, 'medium' => $mediumFilePath, 'large' => $largeFilePath, 'original' => $filePath);
+        return array('path' => $path, 'name' => $fileName);
     }
 
     /**

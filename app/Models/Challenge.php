@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Tag[] $tags
  * @property Trick $winner
  * @property integer $winner_id
+ * @property integer $winner_notes
  * @property boolean hasWinner
  */
 class Challenge extends Model

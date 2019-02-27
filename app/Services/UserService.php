@@ -68,6 +68,21 @@ class UserService extends BaseService implements IUserType {
     }
 
     /**
+     * @param $file
+     * @return Image
+     */
+    public function storeImage($file, $id){
+        $user = $this->findById($id);
+        $image = new Image();
+        $image->storage_path = 'storage/images/profiles/'.$user['id'].'/';
+        $image->data         = json_encode($file['path']);
+        $image->name         = $file['name'];
+
+        $user->profileImage()->save($image);
+        return $image;
+    }
+
+    /**
      * @param $id
      * @param $params
      * @return User
