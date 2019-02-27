@@ -15,6 +15,7 @@ use App\Forms\Auth\ProfileImageForm;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Profile;
 use App\Services\ProfileService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\JWTAuth;
 
@@ -29,17 +30,25 @@ class ProfileController extends Controller
      */
     private $profileService;
 
+    private $userService;
+
     /**
      * ProfileController constructor.
      * @param ProfileService $service
+     * @param UserService $userService
      */
-    public function __construct(ProfileService $service)
+    public function __construct(ProfileService $service, UserService $userService)
     {
         $this->profileService = $service;
+        $this->userService = $userService;
     }
 
+    /**
+     * @return Profile
+     */
     public function index(){
-
+        $profile = $this->userService->findById( $this->currentUser() );
+        return new Profile($profile);
     }
 
     /**
@@ -54,15 +63,6 @@ class ProfileController extends Controller
         $form->password_confirmation    = $request['password_confirmation'];
         $user = $this->profileService->password($form);
         return $user;
-    }
-
-    /**
-     * @param Request $request
-     * @return Profile
-     */
-    public function show(Request $request){
-        $profile = $this->profileService->view( $this->currentUser() );
-        return new Profile($profile);
     }
 
     /**

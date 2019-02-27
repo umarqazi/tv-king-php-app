@@ -177,6 +177,7 @@ class DemoCommand extends Command
         if($form->passes()){
             $service = new ChallengeService();
             $challenge = $service->persist($form);
+            $service->publish($challenge->id);
 
             $customers = $this->randomCustomers(10);
             foreach ($customers as $idx => $customer_id){

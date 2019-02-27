@@ -15,6 +15,9 @@ namespace App\Forms;
 abstract class BaseListForm extends BaseForm implements IListForm
 {
     public $keyword;
+    public $sortBy = 'created_at';
+    public $sortOrder = 'desc';
+    public $itemPerPage = 20;
 
     /**
      * @return mixed

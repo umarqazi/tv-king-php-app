@@ -55,7 +55,7 @@ Route::prefix('/customer/v1/')->group(function () {
 
         Route::get("/challenges", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@index');
         Route::get("/challenges/{id}", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@view');
-        Route::get("/challenges/{'}/tricks", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@tricks');
+        Route::get("/challenges/{challenge_id}/tricks", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@tricks');
         Route::post("/challenges/{challenge_id}/tricks", '\App\Http\Controllers\Api\Customer\v1\TrickController@store');
     });
 });
