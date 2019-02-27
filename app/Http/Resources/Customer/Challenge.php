@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\App;
 class Challenge extends JsonResource implements IResource
 {
 
+    /**
+     * @var ChallengeService
+     */
     private $challengeService;
 
     public function __construct($resource)

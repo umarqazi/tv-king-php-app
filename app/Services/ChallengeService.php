@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Forms\BaseListForm;
 use App\Forms\Challenge\CreatorForm;
 use App\Forms\Challenge\SearchForm;
+use App\Forms\Challenge\WinnerForm;
 use App\Forms\IForm;
 use App\Forms\IListForm;
 use App\Helpers\Util;
@@ -27,7 +28,7 @@ class ChallengeService extends BaseService{
 
     /**
      * @param IForm $form
-     * @return Challenge|mixed
+     * @return Challenge
      */
     public function persist(IForm $form)
     {
@@ -126,12 +127,27 @@ class ChallengeService extends BaseService{
     }
 
     /**
-     * @param integer $challenge_id
-     * @param integer $trick_id
+     * @param $challenge_id
+     * @return boolean
      */
-    public function winner($challenge_id, $trick_id){
+    public function hasWinner($challenge_id){
         $challenge = $this->findById($challenge_id);
-        $challenge->winner_id = $trick_id;
+        return $challenge->hasWinner;
+    }
+
+
+    /**
+     * @param WinnerForm $form
+     * @return Challenge
+     */
+    public function winner(WinnerForm $form){
+        $form->validate();
+        $challenge = $this->findById($form->challenge_id);
+        $challenge->winner_id = $form->trick_id;
+        $challenge->winner_notes = $form->notes;
+        $challenge->winner_at = Carbon::now();
         $challenge->save();
+        $challenge->refresh();
+        return $challenge;
     }
 }
