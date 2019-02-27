@@ -10,6 +10,8 @@ use App\Forms\IListForm;
 use App\Helpers\Util;
 use App\Models\Challenge;
 use App\Models\TagChallenge;
+use App\Models\Trick;
+use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -71,6 +73,7 @@ class ChallengeService extends BaseService{
     public function publish($id){
         $challenge = $this->findById($id);
         $challenge->published = true;
+        $challenge->published_at = Carbon::now();
         $challenge->save();
         $challenge->refresh();
         return $challenge;
@@ -107,6 +110,19 @@ class ChallengeService extends BaseService{
         $query->when($form->brand_id, function($query, $brand_id){
             $query->where('brand_id', '=', $brand_id);
         });
-        return $query->paginate(10);
+        $query->when($form->published, function($query, $published){
+            $query->where('published', '=', $published);
+        });
+        return $query->orderBy($form->sortBy, $form->sortOrder)->paginate($form->itemPerPage);
     }
+
+    /**
+     * @param $customer_id
+     * @param $challenge_id
+     * @return boolean
+     */
+    public function hasTrick($customer_id, $challenge_id){
+        return Trick::query()->where(['customer_id' => $customer_id, 'challenge_id' => $challenge_id])->exists();
+    }
+
 }

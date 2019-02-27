@@ -37,6 +37,9 @@ class ChallengeController extends Controller
      */
     public function index(){
         $form = new SearchForm();
+        $form->sortOrder = 'DESC';
+        $form->sortBy = 'published_at';
+        $form->published = true;
         $result = $this->challengeService->search($form);
         return new ChallengeCollection($result);
     }

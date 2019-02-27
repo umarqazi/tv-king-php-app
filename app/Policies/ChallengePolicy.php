@@ -46,7 +46,7 @@ class ChallengePolicy
      * Determine whether the user can update the app models challenge.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\AppModelsChallenge  $appModelsChallenge
+     * @param  \App\Models\Challenge  $appModelsChallenge
      * @return mixed
      */
     public function update(User $user, Challenge $challenge)
@@ -58,7 +58,7 @@ class ChallengePolicy
      * Determine whether the user can delete the app models challenge.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\AppModelsChallenge  $appModelsChallenge
+     * @param  \App\Models\Challenge  $appModelsChallenge
      * @return mixed
      */
     public function delete(User $user, Challenge $challenge)
@@ -70,7 +70,7 @@ class ChallengePolicy
      * Determine whether the user can restore the app models challenge.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\AppModelsChallenge  $appModelsChallenge
+     * @param  \App\Models\Challenge  $appModelsChallenge
      * @return mixed
      */
     public function restore(User $user, Challenge $challenge)
@@ -82,7 +82,7 @@ class ChallengePolicy
      * Determine whether the user can permanently delete the app models challenge.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\AppModelsChallenge  $appModelsChallenge
+     * @param  \App\Models\Challenge $appModelsChallenge
      * @return mixed
      */
     public function forceDelete(User $user, Challenge $challenge)
