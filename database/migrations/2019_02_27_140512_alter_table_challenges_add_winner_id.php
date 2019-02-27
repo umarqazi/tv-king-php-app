@@ -16,6 +16,7 @@ class AlterTableChallengesAddWinnerId extends Migration
         Schema::table('challenges', function (Blueprint $table) {
             $table->unsignedInteger('winner_id')->nullable();
             $table->foreign('winner_id')->references('id')->on('tricks')->onDelete('cascade');
+            $table->text('winner_notes')->nullable();
         });
     }
 
@@ -29,6 +30,7 @@ class AlterTableChallengesAddWinnerId extends Migration
         Schema::table('challenges', function (Blueprint $table) {
             $table->dropForeign('challenges_winner_id_foreign');
             $table->dropColumn('winner_id');
+            $table->dropColumn('winner_notes');
         });
     }
 }
