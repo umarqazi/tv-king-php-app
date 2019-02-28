@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Forms\BaseListForm;
 use App\Forms\IListForm;
+use App\Forms\SearchForm;
 use App\Models\Image;
 use App\Models\User;
 use App\Forms\IForm;
@@ -16,15 +17,28 @@ use Illuminate\Support\Facades\Hash;
  */
 class UserService extends BaseService implements IUserType {
 
+    /**
+     * @var null
+     */
+    public $user_type = null;
+
+    /**
+     * UserService constructor.
+     */
+    public function __construct()
+    {
+
+    }
 
     /**
      * @param IForm $form
-     * @return mixed
+     * @return mixed|void
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function persist(IForm $form)
     {
         $form->validate();
-        // TODO: Implement persist() method.
+
     }
 
     /**
@@ -38,20 +52,28 @@ class UserService extends BaseService implements IUserType {
 
     /**
      * @param $id
-     * @return User
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed
      */
     public function findById($id)
     {
-        return User::query()->findOrFail($id);
+        if(blank($this->user_type)){
+            return User::query()->findOrFail($id);
+        }
+        return User::query()->where(['id' => $id, 'user_type' => $this->user_type])->firstOrFail();
     }
 
     /**
-     * @param IListForm $form
-     * @return \Illuminate\Pagination\LengthAwarePaginator
+     * @param BaseListForm|null $form
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Pagination\LengthAwarePaginator
      */
     public function search(BaseListForm $form = null)
     {
-        // TODO: Implement search() method.
+        /** @var SearchForm $form */
+        $query = User::query();
+        $query->when($form->user_type, function($query, $user_type){
+            $query->where(['user_type' => $user_type]);
+        });
+        return $query->orderBy($form->sortBy, $form->sortOrder)->paginate($form->itemPerPage);
     }
 
     /**

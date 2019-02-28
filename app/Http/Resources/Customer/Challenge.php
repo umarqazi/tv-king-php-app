@@ -54,14 +54,14 @@ class Challenge extends JsonResource implements IResource
     public function forList($request){
         return [
             'id' => $this->id,
-            'title' => $this->title,
+            'title' => $this->name,
             'brand' => $this->brand->name,
             'address' => $this->address,
             'city' => $this->city,
             'state' => $this->state,
             'location' => [
-                'latitute' => '',
-                'logitude' => ''
+                'lat' => $this->location->getLat(),
+                'lng' => $this->location->getLng(),
             ],
             'created_at' => $this->created_at->format('M/d/Y'),
             'created_ago' => Carbon::parse($this->created_at)->diffForHumans(),

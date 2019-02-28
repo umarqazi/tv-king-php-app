@@ -8,7 +8,10 @@
 
 namespace App\Http\Controllers\Api\Admin\v1;
 
+use App\Forms\Trick\SearchForm;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\Trick;
+use App\Http\Resources\Admin\TrickCollection;
 use App\Services\TrickService;
 use Illuminate\Http\Request;
 
@@ -35,17 +38,22 @@ class TrickController extends Controller
 
     /**
      * @param Request $request
+     * @return TrickCollection
      */
-    public function index($challenge_id, Request $request){
-
-
+    public function index(Request $request)
+    {
+        $form = new SearchForm();
+        $tricks = $this->trickService->search($form);
+        return new TrickCollection($tricks);
     }
 
     /**
      * @param $id
+     * @return Trick
      */
     public function view($id){
-
+        $trick = $this->trickService->findById($id);
+        return new Trick($trick);
     }
 
     /**

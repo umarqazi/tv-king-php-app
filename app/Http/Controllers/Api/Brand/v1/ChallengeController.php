@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Api\Brand\v1;
 
+use App\Forms\Challenge\CreatorForm;
 use App\Forms\Challenge\SearchForm;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChallengeRequest;
@@ -80,14 +81,15 @@ class ChallengeController extends Controller
      *
      */
     public function store(Request $request){
-        $form = new ChallengeCreatorForm();
-        $response = $this->challengeService->persist();
+        $form = new CreatorForm();
+        $response = $this->challengeService->persist($request->all());
         return $response;
     }
 
     /**
      * @param $id
-     * @return mixed
+     * @return \App\Http\Resources\Brand\Challenge
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function view($id){
         $challenge = $this->challengeService->findById($id);
@@ -96,7 +98,10 @@ class ChallengeController extends Controller
         return new \App\Http\Resources\Brand\Challenge($challenge);
     }
 
-
+    /**
+     * @param Request $request
+     * @return \App\Http\Resources\Brand\ChallengeCollection
+     */
     public function index(Request $request){
         $form = new SearchForm();
         $form->brand_id = auth()->user()->getAuthIdentifier();

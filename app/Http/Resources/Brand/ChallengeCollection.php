@@ -24,6 +24,10 @@ class ChallengeCollection extends ResourceCollection
                     'city' => $challenge->city,
                     'state' => $challenge->state,
                     'country' => $challenge->country,
+                    'location' => [
+                        'lat' => $challenge->location->getLat(),
+                        'lng' => $challenge->location->getLng(),
+                    ],
                     'reward' => $challenge->reward,
                     'reward_notes' => $challenge->reward_notes,
                     'reward_url' => $challenge->reward_url,

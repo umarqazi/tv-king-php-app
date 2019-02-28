@@ -36,6 +36,16 @@ Route::prefix('/admin/v1/')->group(function () {
         Route::post("/tags", '\App\Http\Controllers\Api\Admin\v1\TagController@store');
         Route::get("/tags", '\App\Http\Controllers\Api\Admin\v1\TagController@index');
         Route::get("/tags/{id}", '\App\Http\Controllers\Api\Admin\v1\TagController@view');
+
+
+        Route::get("/brands", '\App\Http\Controllers\Api\Admin\v1\BrandController@index');
+        Route::get("/brand/{id}", '\App\Http\Controllers\Api\Admin\v1\BrandController@view');
+        Route::get("/customers", '\App\Http\Controllers\Api\Admin\v1\CustomerController@index');
+        Route::get("/customer/{id}", '\App\Http\Controllers\Api\Admin\v1\CustomerController@view');
+        Route::get("/challenges", '\App\Http\Controllers\Api\Admin\v1\ChallengeController@index');
+        Route::get("/challenge/{id}", '\App\Http\Controllers\Api\Admin\v1\ChallengeController@view');
+        Route::get("/tricks", '\App\Http\Controllers\Api\Admin\v1\TrickController@index');
+        Route::get("/trick/{id}", '\App\Http\Controllers\Api\Admin\v1\TrickController@view');
     });
 });
 
@@ -69,7 +79,7 @@ Route::prefix('/brand/v1/')->group(function () {
 
     Route::group(['middleware' =>[ 'jwt.auth','brand.authenticator']], function(){
         Route::get('/profile', '\App\Http\Controllers\Api\Brand\v1\ProfileController@index');
-        Route::post('/profile', '\App\Http\Controllers\Api\Brand\v1\ProfileController@profile');
+        Route::put('/profile', '\App\Http\Controllers\Api\Brand\v1\ProfileController@profile');
         Route::post('/profile/password', '\App\Http\Controllers\Api\Brand\v1\ProfileController@password');
         Route::post('/profile/image', '\App\Http\Controllers\Api\Brand\v1\ProfileController@image');
 
@@ -77,6 +87,8 @@ Route::prefix('/brand/v1/')->group(function () {
         Route::post("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@store');
         Route::get("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@index');
         Route::get("/challenges/{id}", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@view');
+        Route::get("/challenges/{challenge_id}/tricks", '\App\Http\Controllers\Api\Brand\v1\TrickController@index');
+        Route::post("/challenges/{id}/winner", '\App\Http\Controllers\Api\Brand\v1\TrickController@winner');
     });
 });
 

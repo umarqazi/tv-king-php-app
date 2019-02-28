@@ -16,8 +16,9 @@ use App\Models\Trick;
 class TrickService extends BaseService {
 
     /**
-     * @param $params
-     * @return mixed
+     * @param IForm $form
+     * @return Trick|mixed
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function persist(IForm $form)
     {

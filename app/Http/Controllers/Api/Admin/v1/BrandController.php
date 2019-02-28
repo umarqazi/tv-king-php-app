@@ -8,8 +8,12 @@
 
 namespace App\Http\Controllers\Api\Admin\v1;
 
+use App\Forms\SearchForm;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\Brand;
+use App\Http\Resources\Admin\BrandCollection;
 use App\Services\BrandService;
+use App\Services\IUserType;
 use Illuminate\Http\Request;
 
 /**
@@ -34,16 +38,22 @@ class BrandController extends Controller
 
     /**
      * @param Request $request
+     * @return BrandCollection
      */
     public function index(Request $request){
-
+        $form = new SearchForm();
+        $form->user_type = IUserType::BRAND;
+        $brand = $this->brandService->search($form);
+        return new BrandCollection($brand);
     }
 
     /**
      * @param $id
+     * @return Brand
      */
     public function view($id){
-
+     $brand = $this->brandService->findById($id);
+     return new Brand($brand);
     }
 
     /**

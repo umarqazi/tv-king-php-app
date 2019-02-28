@@ -43,6 +43,8 @@ class CreatorForm extends BaseForm
             'city' => 'required',
             'state' => 'required',
             'country' => 'required',
+            'longitude' => 'required',
+            'latitude' => 'required',
         ];
     }
 

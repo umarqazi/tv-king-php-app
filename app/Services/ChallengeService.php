@@ -13,6 +13,7 @@ use App\Models\Challenge;
 use App\Models\TagChallenge;
 use App\Models\Trick;
 use Carbon\Carbon;
+use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -42,7 +43,7 @@ class ChallengeService extends BaseService{
         $entity->city = $form->city;
         $entity->state = $form->state;
         $entity->country = $form->country;
-        $entity->location = DB::raw('NULL');
+        $entity->location = new Point($form->latitude, $form->longitude);
         $entity->published = false;
 
         $entity->reward = Util::get($form->reward, '');

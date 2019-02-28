@@ -8,7 +8,10 @@
 
 namespace App\Http\Controllers\Api\Admin\v1;
 
+use App\Forms\Challenge\SearchForm;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\Challenge;
+use App\Http\Resources\Admin\ChallengeCollection;
 use App\Services\ChallengeService;
 use Illuminate\Http\Request;
 
@@ -35,16 +38,22 @@ class ChallengeController extends Controller
 
     /**
      * @param Request $request
+     * @return ChallengeCollection
      */
     public function index(Request $request){
-
+        $form = new SearchForm();
+        $form->published = true;
+        $brand = $this->service->search($form);
+        return new ChallengeCollection($brand);
     }
 
     /**
      * @param $id
+     * @return Challenge
      */
     public function view($id){
-
+        $challenge = $this->service->findById($id);
+        return new Challenge($challenge);
     }
 
     /**

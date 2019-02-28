@@ -14,5 +14,13 @@ namespace App\Services;
  */
 class CustomerService extends UserService
 {
+    /**
+     * CustomerService constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->user_type = IUserType::CUSTOMER;
+    }
 
 }

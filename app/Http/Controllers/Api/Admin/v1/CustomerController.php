@@ -8,7 +8,12 @@
 
 namespace App\Http\Controllers\Api\Admin\v1;
 
+use App\Forms\SearchForm;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\Customer;
+use App\Http\Resources\Admin\CustomerCollection;
+use App\Services\CustomerService;
+use App\Services\IUserType;
 use Illuminate\Http\Request;
 
 /**
@@ -18,7 +23,7 @@ use Illuminate\Http\Request;
 class CustomerController extends Controller
 {
     /**
-     * @var
+     * @var CustomerService
      */
     private $service;
 
@@ -34,16 +39,22 @@ class CustomerController extends Controller
 
     /**
      * @param Request $request
+     * @return CustomerCollection
      */
     public function index(Request $request){
-
+        $form = new SearchForm();
+        $form->user_type = IUserType::CUSTOMER;
+        $brand = $this->service->search($form);
+        return new CustomerCollection($brand);
     }
 
     /**
      * @param $id
+     * @return Customer
      */
     public function view($id){
-
+        $customer = $this->service->findById($id);
+        return new Customer($customer);
     }
 
     /**

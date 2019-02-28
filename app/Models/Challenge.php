@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -34,6 +35,11 @@ use Illuminate\Support\Collection;
  */
 class Challenge extends Model
 {
+    use SpatialTrait;
+
+    protected $spatialFields = [
+        'location'
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
