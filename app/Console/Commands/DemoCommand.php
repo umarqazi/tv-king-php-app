@@ -215,6 +215,7 @@ class DemoCommand extends Command
             $service = new ChallengeService();
             $challenge = $service->persist($form);
             $service->publish($challenge->id);
+            VarDumper::dump('Creating Challenge ' . $challenge->id);
 
             $customers = $this->randomCustomers(10);
             foreach ($customers as $idx => $customer_id){
