@@ -29,7 +29,7 @@ RUN chown -R www-data:www-data \
         /var/www/tv-king/storage \
         /var/www/tv-king/bootstrap/cache
 
-RUN php artisan optimize
+#RUN php artisan optimize
 RUN php artisan config:cache
 
 RUN a2enmod rewrite headers expires negotiation
