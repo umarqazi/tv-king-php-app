@@ -33,14 +33,14 @@ services:
     container_name: php_tv_king
     build:
       context: ./../
-      dockerfile: ./docker-setup/Dockerfile
+      dockerfile: ./docker-setup/Dockerfile-dev
     restart: always
     links:
       - tv_king_mysql:db
     volumes:
       - ./apache2.conf:/etc/apache2/sites-available/000-default.conf
       - ${DATA_DIR}/logs:/var/log/apache2
-      - ${DATA_DIR}/storage:/var/www/tv-king/storage
+      - ./../:/var/www/tv-king
     ports:
       - "80:80"
     environment:
