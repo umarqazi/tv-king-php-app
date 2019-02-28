@@ -25,7 +25,7 @@ RUN /usr/local/bin/composer install --no-dev
 
 COPY docker-setup/docker.env .env
 
-RUN chmod 0777 /var/www/tv-king -R
+#RUN chmod 0777 /var/www/tv-king -R
 
 RUN a2enmod rewrite headers expires negotiation
 RUN service apache2 restart
