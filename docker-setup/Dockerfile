@@ -21,11 +21,16 @@ ADD composer*.json .
 
 COPY . .
 
-RUN /usr/local/bin/composer install --no-dev
+RUN /usr/local/bin/composer install --optimize-autoloader --no-dev
 
 COPY docker-setup/docker.env .env
 
-#RUN chmod 0777 /var/www/tv-king -R
+RUN chown -R www-data:www-data \
+        /var/www/tv-king/storage \
+        /var/www/tv-king/bootstrap/cache
+
+RUN php artisan optimize
+RUN php artisan config:cache
 
 RUN a2enmod rewrite headers expires negotiation
 RUN service apache2 restart

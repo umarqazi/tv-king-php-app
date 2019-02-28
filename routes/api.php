@@ -84,6 +84,4 @@ Route::prefix('/brand/v1/')->group(function () {
 /**
  *
  */
-Route::fallback(function(Request $request){
-    return response()->json(['message' => 'Route Not Found.', 'route' => $request->getRequestUri()], 404);
-})->name('api.fallback.404');
+Route::fallback('\App\Http\Controllers\ErrorController@noRouteFound')->name('api.fallback.404');
