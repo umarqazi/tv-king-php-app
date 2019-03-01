@@ -38,7 +38,14 @@ class UserService extends BaseService implements IUserType {
     public function persist(IForm $form)
     {
         $form->validate();
-
+        $user = new User();
+        $user->first_name = $form->firstName;
+        $user->last_name = $form->lastName;
+        $user->email = $form->email;
+        $user->user_type = $form->user_type;
+        $user->password = Hash::make($form->password);
+        $user->save();
+        return $user;
     }
 
     /**

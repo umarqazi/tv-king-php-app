@@ -12,6 +12,7 @@ use App\Forms\Challenge\CreatorForm;
 use App\Forms\Challenge\SearchForm;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChallengeRequest;
+use App\Http\Resources\Brand\Trick;
 use App\Models\Challenge;
 use App\Services\ChallengeService;
 use Illuminate\Http\Request;
@@ -96,7 +97,7 @@ class ChallengeController extends Controller
         $form->reward_notes = $request->reward_notes;
         $form->reward_url = $request->reward_url;
         $response = $this->challengeService->persist($form);
-        return $response;
+        return new Trick($response);
     }
 
     /**

@@ -2,8 +2,11 @@
 
 namespace App\Http\Resources\Brand;
 
+use App\Forms\Trick\SearchForm;
 use App\Http\Resources\IResource;
+use App\Services\TrickService;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\App;
 
 class Challenge extends JsonResource implements IResource
 {
@@ -15,7 +18,13 @@ class Challenge extends JsonResource implements IResource
      */
     public function toArray($request)
     {
+        $service = App::make(TrickService::class);
+        $form = new SearchForm();
+        $form->challenge_id = $this->id;
         $mapped = $this->forList($request);
+
+        $tricks = new TrickCollection($service->search($form));
+        $mapped['tricks'] = $tricks;
         return $mapped;
     }
 
@@ -25,25 +34,7 @@ class Challenge extends JsonResource implements IResource
      */
     public function forList($request)
     {
-        return [
-            'id'            => $this->id,
-            'name'          => $this->name,
-            'description'   => $this->description,
-            'address'       => $this->address,
-            'city'          => $this->city,
-            'state'         => $this->state,
-            'country'       => $this->country,
-            'location'      => $this->location,
-            'reward'        => $this->reward,
-            'reward_notes'  => $this->reward_notes,
-            'reward_url'    => $this->reward_url,
-            'published'     => $this->published,
-            'tags'          => $this->tags,
-            'tricks'        => $this->tricks,
-            'winner_id'     => $this->winner_id,
-            'winner_notes'  => $this->winner_notes,
-            'winner_at'     => $this->winner_at,
-            'hasWinner'     => $this->hasWinner,
-        ];
+        $mapper = new \App\Http\Resources\Customer\Challenge( $this );
+        return $mapper->forList($request);
     }
 }

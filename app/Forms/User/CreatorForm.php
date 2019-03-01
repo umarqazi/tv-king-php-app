@@ -20,6 +20,9 @@ class CreatorForm extends BaseForm
     public $firstName;
     public $lastName;
     public $email;
+    public $user_type;
+    public $password;
+    public $password_confirmation;
 
     /**
      * Get the instance as an array.
@@ -29,9 +32,12 @@ class CreatorForm extends BaseForm
     public function toArray()
     {
        return [
-           'firstName' => $this->firstName,
-           'lastName' => $this->lastName,
-           'email' => $this->email
+           'first_name' => $this->firstName,
+           'last_name' => $this->lastName,
+           'email' => $this->email,
+           'user_type' => $this->user_type,
+           'password' => $this->password,
+           'password_confirmation' => $this->password_confirmation
        ];
     }
 
@@ -41,9 +47,11 @@ class CreatorForm extends BaseForm
     public function rules()
     {
         return [
-            'firstName' => 'required',
-            'lastName' => 'required',
-            'email' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email',
+            'user_type' => 'required',
+            'password' => 'required|min:8|confirmed',
         ];
     }
 }

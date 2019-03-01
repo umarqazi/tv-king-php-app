@@ -17,8 +17,9 @@ use App\Forms\Tag\CreatorForm;
 class TagService extends BaseService {
 
     /**
-     * @param CreatorForm $params
-     * @return \App\Models\Tag
+     * @param IForm $form
+     * @return Tag|mixed
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function persist(IForm $form)
     {

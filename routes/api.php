@@ -20,9 +20,6 @@ use Illuminate\Support\Facades\Route;
 
 //Admin APIs
 Route::prefix('/admin/v1/')->group(function () {
-    /**
-     * Public Routes
-     */
     Route::post('/signup', '\App\Http\Controllers\Api\Admin\v1\SignupController@register');
     Route::post('/login', '\App\Http\Controllers\Api\Admin\v1\LoginController@index');
 
