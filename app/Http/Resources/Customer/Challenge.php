@@ -56,18 +56,19 @@ class Challenge extends JsonResource implements IResource
     public function forList($request){
         return [
             'id' => $this->id,
-            'title' => $this->name,
+            'name' => $this->name,
+            'description' => $this->description,
             'brand' => $this->brand->name,
             'address' => $this->address,
             'city' => $this->city,
             'state' => $this->state,
+            'country'       => $this->country,
             'location' => [
                 'lat' => $this->location->getLat(),
                 'lng' => $this->location->getLng(),
             ],
             'created_at' => $this->created_at->format('M/d/Y'),
             'created_ago' => Carbon::parse($this->created_at)->diffForHumans(),
-            'customer_id' => auth()->id(),
             'has_trick' => $this->challengeService->hasTrick(auth()->id(), $this->id),
             'has_winner' => $this->hasWinner,
             'trick_count' => $this->tricks->count(),

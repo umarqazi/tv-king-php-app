@@ -33,7 +33,10 @@ class Challenge extends JsonResource implements IResource
             'city'          => $this->city,
             'state'         => $this->state,
             'country'       => $this->country,
-            'location'      => $this->location,
+            'location' => [
+                'lat' => $this->location->getLat(),
+                'lng' => $this->location->getLng(),
+            ],
             'reward'        => $this->reward,
             'reward_notes'  => $this->reward_notes,
             'reward_url'    => $this->reward_url,
@@ -44,6 +47,8 @@ class Challenge extends JsonResource implements IResource
             'winner_notes'  => $this->winner_notes,
             'winner_at'     => $this->winner_at,
             'hasWinner'     => $this->hasWinner,
+            'trick_count' => $this->tricks->count(),
+            'winner' => $this->when($this->hasWinner, (new Trick($this->winner)), [])
         ];
     }
 }
