@@ -82,7 +82,20 @@ class ChallengeController extends Controller
      */
     public function store(Request $request){
         $form = new CreatorForm();
-        $response = $this->challengeService->persist($request->all());
+        $form->name = $request->name;
+        $form->description = $request->description;
+        $form->brand_id = auth()->user()->getAuthIdentifier();
+        $form->address = $request->address;
+        $form->city = $request->city;
+        $form->state = $request->state;
+        $form->country = $request->country;
+        $form->latitude = $request->latitude;
+        $form->longitude = $request->longitude;
+        $form->tags = $request->tags;
+        $form->reward = $request->reward;
+        $form->reward_notes = $request->reward_notes;
+        $form->reward_url = $request->reward_url;
+        $response = $this->challengeService->persist($form);
         return $response;
     }
 
@@ -107,5 +120,10 @@ class ChallengeController extends Controller
         $form->brand_id = auth()->user()->getAuthIdentifier();
         $search = $this->challengeService->search( $form );
         return new \App\Http\Resources\Brand\ChallengeCollection($search);
+    }
+
+    public function publish($id){
+        $challenge = $this->challengeService->publish($id);
+        return new \App\Http\Resources\Brand\Challenge($challenge);
     }
 }

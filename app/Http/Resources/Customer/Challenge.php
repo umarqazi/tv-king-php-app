@@ -52,6 +52,7 @@ class Challenge extends JsonResource implements IResource
 
     /**
      * @param $request
+     * @return array|mixed
      */
     public function forList($request){
         return [
