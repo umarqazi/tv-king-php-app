@@ -21,7 +21,6 @@ class ChallengeCollection extends ResourceCollection
     public function __construct($resource)
     {
         parent::__construct($resource);
-        $this->challengeService = App::make(ChallengeService::class);
     }
 
     /**

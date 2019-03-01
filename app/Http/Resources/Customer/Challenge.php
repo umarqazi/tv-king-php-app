@@ -63,6 +63,7 @@ class Challenge extends JsonResource implements IResource
                 'lat' => $this->location->getLat(),
                 'lng' => $this->location->getLng(),
             ],
+            'tags'          => $this->tags->pluck('name', 'id'),
             'created_at' => $this->created_at->format('M/d/Y'),
             'created_ago' => Carbon::parse($this->created_at)->diffForHumans(),
             'has_trick' => $this->challengeService->hasTrick(auth()->id(), $this->id),

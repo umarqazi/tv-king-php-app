@@ -40,7 +40,7 @@ class Trick extends JsonResource implements IResource
             'performed_by' => new Profile($this->customer),
             'created_at' => $this->created_at->format("M/d/Y"),
             'time_ago' => Carbon::parse($this->created_at)->diffForHumans(),
-            //'is_winner' => ($this->challenge->winner_id == $this->id)
+            'is_winner' => ($this->challenge->winner_id == $this->id)
         ];
     }
 }

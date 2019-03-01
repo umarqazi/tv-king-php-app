@@ -16,27 +16,9 @@ class ChallengeCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data' => $this->collection->transform(function(Challenge $challenge){
-                return [
-                    'id' => $challenge->id,
-                    'name' => $challenge->name,
-                    'address' => $challenge->address,
-                    'city' => $challenge->city,
-                    'state' => $challenge->state,
-                    'country' => $challenge->country,
-                    'location' => [
-                        'lat' => $challenge->location->getLat(),
-                        'lng' => $challenge->location->getLng(),
-                    ],
-                    'reward' => $challenge->reward,
-                    'reward_notes' => $challenge->reward_notes,
-                    'reward_url' => $challenge->reward_url,
-                    'published' => $challenge->published,
-                    'trick_count' => $challenge->tricks->count(),
-                    'has_winner' => false
-                ];
+            'data' => $this->collection->transform(function(Challenge $challenge) use ($request){
+                return $challenge->forList($request);
             })
         ];
-        return parent::toArray($request);
     }
 }
