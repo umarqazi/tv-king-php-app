@@ -1,0 +1,47 @@
+version: "3"
+services:
+  tv_king_mysql:
+    container_name: tv_king_mysql
+    restart: always
+    image: mysql/mysql-server:5.7
+    command: --sql_mode=""
+    environment:
+      MYSQL_ROOT_PASSWORD: "abc123"
+      MYSQL_ROOT_HOST: "%"
+    volumes:
+      - ${DATA_DIR}/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  tv_phpmyadmin:
+    container_name: "tv_phpmyadmin"
+    restart: always
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8000:80
+    links:
+      - tv_king_mysql:db
+    volumes:
+      - ./config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+    environment:
+      PMA_HOST: db
+      PMA_USER: "root"
+      PMA_PASSWORD: "abc123"
+      MYSQL_ROOT_PASSWORD: "abc123"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "abc123"
+  php_tv_king:
+    container_name: php_tv_king
+    build:
+      context: ./../
+      dockerfile: ./docker-setup/Dockerfile
+    restart: always
+    links:
+      - tv_king_mysql:db
+    volumes:
+      - ./apache2.conf:/etc/apache2/sites-available/000-default.conf
+      - ${DATA_DIR}/logs:/var/log/apache2
+      - ./../:/var/www/tv-king
+    ports:
+      - "80:80"
+    environment:
+      - ALLOW_OVERRIDE=true

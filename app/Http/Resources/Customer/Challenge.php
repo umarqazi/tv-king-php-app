@@ -44,7 +44,9 @@ class Challenge extends JsonResource implements IResource
         $mapped = $this->forList($request);
         $form = new SearchForm();
         $form->challenge_id = $this->id;
-        $mapped['tricks'] = $this->trickService->search($form);
+        $trickCollection = $this->trickService->search($form);
+        $trickCollection->withPath(route('brand_tricks', ['challenge_id' => $this->id], true));
+        $mapped['tricks'] = $trickCollection;
         return $mapped;
     }
 
@@ -69,7 +71,7 @@ class Challenge extends JsonResource implements IResource
             'has_trick' => $this->challengeService->hasTrick(auth()->id(), $this->id),
             'has_winner' => $this->hasWinner,
             'trick_count' => $this->tricks->count(),
-            'winner' => new Trick($this->winner)
+            'winner' => $this->when($this->hasWinner, (new Trick($this->winner)), [])
         ];
     }
 }
