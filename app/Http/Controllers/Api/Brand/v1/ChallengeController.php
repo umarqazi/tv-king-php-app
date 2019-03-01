@@ -95,7 +95,7 @@ class ChallengeController extends Controller
         $form->reward = $request->reward;
         $form->reward_notes = $request->reward_notes;
         $form->reward_url = $request->reward_url;
-        $response = $this->challengeService->persist($request->all());
+        $response = $this->challengeService->persist($form);
         return $response;
     }
 
@@ -120,5 +120,10 @@ class ChallengeController extends Controller
         $form->brand_id = auth()->user()->getAuthIdentifier();
         $search = $this->challengeService->search( $form );
         return new \App\Http\Resources\Brand\ChallengeCollection($search);
+    }
+
+    public function publish($id){
+        $challenge = $this->challengeService->publish($id);
+        return new \App\Http\Resources\Brand\Challenge($challenge);
     }
 }
