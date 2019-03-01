@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\Admin\v1;
 
+use App\Forms\User\CreatorForm;
 use App\Http\Requests\UserSignup;
+use App\Services\IUserType;
 use App\Services\SignupService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -58,11 +60,15 @@ class SignupController extends Controller
      *
      */
     public function register(Request $request){
-        /**
-         * Validations are done...
-         */
-        $response = $this->signup_service->asAdmin($request->all());
-        return $response;
+        $form = new CreatorForm();
+        $form->firstName = $request['first_name'];
+        $form->lastName = $request['last_name'];
+        $form->email = $request['email'];
+        $form->user_type = IUserType::ADMIN;
+        $form->password = $request['password'];
+        $form->password_confirmation = $request['password_confirmation'];
+        $admin = $this->signup_service->persist($form);
+        return $admin;
     }
 
     /**

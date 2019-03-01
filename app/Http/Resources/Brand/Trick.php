@@ -21,7 +21,8 @@ class Trick extends JsonResource implements IResource
      */
     public function toArray($request)
     {
-        return $this->forList($request);
+        $mapped = $this->forList($request);
+        return $mapped;
     }
 
     /**
