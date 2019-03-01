@@ -3,10 +3,15 @@
 namespace App\Http\Resources\Brand;
 
 use App\Http\Resources\Customer\Profile;
+use App\Http\Resources\IResource;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Trick extends JsonResource
+/**
+ * Class Trick
+ * @package App\Http\Resources\Brand
+ */
+class Trick extends JsonResource implements IResource
 {
     /**
      * Transform the resource into an array.

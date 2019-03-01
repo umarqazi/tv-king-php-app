@@ -62,7 +62,7 @@ Route::prefix('/customer/v1/')->group(function () {
 
         Route::get("/challenges", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@index');
         Route::get("/challenges/{id}", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@view');
-        Route::get("/challenges/{challenge_id}/tricks", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@tricks');
+        Route::get("/challenges/{challenge_id}/tricks", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@tricks')->name('customer_challenge_tricks');
         Route::post("/challenges/{challenge_id}/tricks", '\App\Http\Controllers\Api\Customer\v1\TrickController@store');
 
         Route::get("/tricks", '\App\Http\Controllers\Api\Customer\v1\TrickController@index');
@@ -84,8 +84,8 @@ Route::prefix('/brand/v1/')->group(function () {
         Route::post("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@store');
         Route::get("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@index');
         Route::get("/challenges/{id}", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@view');
-        Route::get("/challenges/{challenge_id}/tricks", '\App\Http\Controllers\Api\Brand\v1\TrickController@index');
         Route::get("/challenges/{id}/publish", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@publish');
+        Route::get("/challenges/{challenge_id}/tricks", '\App\Http\Controllers\Api\Brand\v1\TrickController@index')->name('brand_challenge_tricks');
         Route::post("/challenges/{id}/winner", '\App\Http\Controllers\Api\Brand\v1\TrickController@winner');
     });
 });

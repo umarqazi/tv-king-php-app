@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Brand;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\Brand\Trick;
 
 class TrickCollection extends ResourceCollection
 {
@@ -14,6 +15,11 @@ class TrickCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        /** @var $this \App\Models\Trick */
+        return [
+            'data' => $this->collection->transform( function(Trick $trick) use ($request){
+                return  $trick->forList($request);
+            })
+        ];
     }
 }

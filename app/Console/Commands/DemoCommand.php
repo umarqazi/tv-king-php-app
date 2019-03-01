@@ -166,9 +166,9 @@ class DemoCommand extends Command
     {
         VarDumper::dump('Creating Customers...');
         $emailsTpl = [
-            ['email' => 'fahad.shehzad+c{counter}@gems.techverx.com', 'count' => 10],
-            ['email' => 'fahad.shehzad+c{counter}_19@gems.techverx.com', 'count' => 10],
-            ['email' => 'fahad.shehzad+c{counter}_18@gems.techverx.com', 'count' => 10],
+            ['email' => 'fahad.shehzad+c{counter}@gems.techverx.com', 'count' => 20],
+            ['email' => 'fahad.shehzad+c{counter}_19@gems.techverx.com', 'count' => 30],
+            ['email' => 'fahad.shehzad+c{counter}_18@gems.techverx.com', 'count' => 30],
             ];
         $this->createUsers($emailsTpl, IUserType::CUSTOMER);
     }
@@ -217,7 +217,7 @@ class DemoCommand extends Command
             $service->publish($challenge->id);
             VarDumper::dump('Creating Challenge ' . $challenge->id);
 
-            $customers = $this->randomCustomers(10);
+            $customers = $this->randomCustomers(20);
             foreach ($customers as $idx => $customer_id){
                 $this->submitTrick($customer_id, $challenge->id);
             }
