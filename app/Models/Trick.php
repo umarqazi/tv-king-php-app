@@ -33,7 +33,7 @@ class Trick extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function challenge(){
-        return $this->hasOne(Challenge::class, 'id', 'challenge_id');
+        return $this->belongsTo(Challenge::class);
     }
 
     /**

@@ -35,11 +35,6 @@ class Challenge extends JsonResource implements IResource
     public function toArray($request)
     {
         $mapped = $this->forList($request);
-        $form = new SearchForm();
-        $form->challenge_id = $this->id;
-        $tricks = $this->trickService->search($form);
-        $trickCollection = new TrickCollection($tricks);
-        $mapped['tricks'] = $trickCollection;
         return $mapped;
     }
 

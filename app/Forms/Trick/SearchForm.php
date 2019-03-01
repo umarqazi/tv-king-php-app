@@ -8,13 +8,16 @@
 
 namespace App\Forms\Trick;
 
-
 use App\Forms\BaseListForm;
 
+/**
+ * Class SearchForm
+ * @package App\Forms\Trick
+ */
 class SearchForm extends BaseListForm
 {
     public $challenge_id;
     public $customer_id;
-
+    public $brand_id;
 
 }

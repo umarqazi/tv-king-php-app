@@ -90,6 +90,8 @@ Route::prefix('/brand/v1/')->group(function () {
         Route::get("/challenges/{id}/publish", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@publish');
         Route::get("/challenges/{challenge_id}/tricks", '\App\Http\Controllers\Api\Brand\v1\TrickController@index')->name('brand_challenge_tricks');
         Route::post("/challenges/{id}/winner", '\App\Http\Controllers\Api\Brand\v1\TrickController@winner');
+
+        Route::get("/tricks", '\App\Http\Controllers\Api\Brand\v1\TrickController@tricks');
     });
 });
 

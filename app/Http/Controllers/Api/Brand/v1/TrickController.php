@@ -16,6 +16,7 @@ use App\Http\Resources\Brand\TrickCollection;
 use App\Services\ChallengeService;
 use App\Services\TrickService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TrickController extends Controller
 {
@@ -41,6 +42,11 @@ class TrickController extends Controller
         return new TrickCollection($tricks);
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \App\Models\Challenge
+     */
     public function winner(Request $request, $id){
         $form = new WinnerForm();
         $form->challenge_id = $id;
@@ -48,5 +54,15 @@ class TrickController extends Controller
         $form->notes = $request['notes'];
         $challenge = $this->challengeService->winner($form);
         return $challenge;
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function tricks(Request $request){
+        $form = new SearchForm();
+        $form->brand_id = Auth::id();
+        $tricks = $this->trickService->search($form);
+        return new TrickCollection($tricks);
     }
 }

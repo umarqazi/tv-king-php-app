@@ -6,7 +6,9 @@ use App\Forms\IForm;
 use App\Forms\IListForm;
 use App\Forms\Trick\CreatorForm;
 use App\Forms\Trick\SearchForm;
+use App\Models\Challenge;
 use App\Models\Trick;
+use Illuminate\Database\Query\Builder;
 
 /**
  * Class TrickService
@@ -57,13 +59,14 @@ class TrickService extends BaseService {
     public function search(BaseListForm $form = null)
     {
         /** @var SearchForm $form */
-        $query = Trick::query()->with(['customer']);
+        $query = Trick::query()->with(['customer', 'challenge']);
         $query->when($form->challenge_id, function($query, $challenge_id){
             $query->where(['challenge_id' => $challenge_id]);
         });
         $query->when($form->customer_id, function($query, $customer_id){
             $query->where(['customer_id' => $customer_id]);
         });
-        return $query->orderBy($form->sortBy, $form->sortOrder)->paginate($form->itemPerPage);
+        $result = $query->orderBy($form->sortBy, $form->sortOrder)->paginate($form->itemPerPage);
+        return $result;
     }
 }
