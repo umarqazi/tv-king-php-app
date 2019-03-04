@@ -59,7 +59,7 @@ class UserService extends BaseService implements IUserType {
 
     /**
      * @param $id
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed
+     * @return User
      */
     public function findById($id)
     {
@@ -98,15 +98,18 @@ class UserService extends BaseService implements IUserType {
 
     /**
      * @param $file
+     * @param User $user
      * @return Image
      */
-    public function storeImage($file, $id){
-        $user = $this->findById($id);
-        $image = new Image();
-        $image->storage_path = 'storage/images/profiles/'.$user['id'].'/';
+    public function storeImage($file, $user){
+        $image = $user->profileImage;
+        if($image === null){
+            $image = new Image();
+        }
+        $image->storage_path = $file['storage_path'];
         $image->data         = json_encode($file['path']);
         $image->name         = $file['name'];
-
+        $image->web_path = $file['web_path'];
         $user->profileImage()->save($image);
         return $image;
     }

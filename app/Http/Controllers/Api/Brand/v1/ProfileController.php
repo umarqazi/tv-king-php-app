@@ -13,6 +13,7 @@ use App\Forms\Auth\PasswordForm;
 use App\Forms\Auth\ProfileForm;
 use App\Forms\Auth\ProfileImageForm;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Image;
 use App\Services\ProfileService;
 use App\Http\Resources\Profile;
 use App\Services\UserService;
@@ -72,8 +73,8 @@ class ProfileController extends Controller
         $form = new ProfileImageForm();
         $form->profile = $request['profile'];
         $form->user_id = $this->currentUser();
-        $user = $this->profileService->image($form);
-        return $user;
+        $profileImage = $this->profileService->image($form);
+        return new Image($profileImage);
     }
 
     /**

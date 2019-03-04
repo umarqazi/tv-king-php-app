@@ -14,12 +14,13 @@ class Image extends JsonResource
      */
     public function toArray($request)
     {
+        $image = $this->resource;
+        /** @var $image \App\Models\Image */
         return [
-            'original' => url($this->storage_path).'/'.$this->name,
-            'small' => url($this->storage_path).'/small/'.$this->name,
-            'medium' => url($this->storage_path).'/medium/'.$this->name,
-            'large' => url($this->storage_path).'/large/'.$this->name
+            'original' => url($image->data['original']),
+            'small' => url($image->data['small']),
+            'medium' => url($image->data['medium']),
+            'large' => url($image->data['large'])
         ];
-        //return parent::toArray($request);
     }
 }

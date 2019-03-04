@@ -50,8 +50,14 @@ class ProfileService
     public function image(ProfileImageForm $form){
         $form->validate();
         $profile  = Input::file('profile');
-        $file     = $this->uploadImages($profile,$form->user_id);
-        $image    = $this->userService->storeImage($file,$form->user_id );
+
+        $user = $this->userService->findById($form->user_id);
+        $savedProfileImage = $user->profileImage;
+        if($savedProfileImage !== null){
+            Storage::deleteDirectory($savedProfileImage->storage_path);
+        }
+        $file     = $this->uploadImages($profile, $form->user_id);
+        $image    = $this->userService->storeImage($file, $user );
         return $image;
     }
 
@@ -61,21 +67,24 @@ class ProfileService
      * @return array
      */
     public function uploadImages($data, $user_id){
-        $fileName   = $data->getClientOriginalName();
+        $fileName   = uniqid('profile-') . '.' . $data->getClientOriginalExtension();
         $ext        = $data->getClientOriginalExtension();
-        $filePath   = 'images/profiles/'.$user_id.'/';
+        $storagePath   = 'storage/images/profiles/'. uniqid() .'/';
+        Storage::makeDirectory($storagePath);
+
         $img = Image::make($data->getRealPath());
 
         // Save Image In Original Size
         $img->stream();
-        Storage::disk('public')->put($filePath.$fileName, $img);
+        $originalImage = $storagePath.$fileName;
+        Storage::disk('public')->put($originalImage, $img);
 
         // Save Small Image
         $img->resize(120, 120, function ($constraint) {
             $constraint->aspectRatio();
         });
         $img->stream();
-        $smallFilePath = $filePath.'small/'.$fileName;
+        $smallFilePath = $storagePath.'small-'.$fileName;
         Storage::disk('public')->put($smallFilePath, $img);
 
         // Save Medium Image
@@ -83,7 +92,7 @@ class ProfileService
             $constraint->aspectRatio();
         });
         $img->stream();
-        $mediumFilePath = $filePath.'medium/'.$fileName;
+        $mediumFilePath = $storagePath.'medium-'.$fileName;
         Storage::disk('public')->put($mediumFilePath, $img);
 
         // Save Large Image
@@ -91,11 +100,20 @@ class ProfileService
             $constraint->aspectRatio();
         });
         $img->stream();
-        $largeFilePath = $filePath.'large/'.$fileName;
+        $largeFilePath = $storagePath.'large-'.$fileName;
         Storage::disk('public')->put($largeFilePath, $img);
 
-        $path = array('small' => $smallFilePath, 'medium' => $mediumFilePath, 'large' => $largeFilePath, 'original' => $filePath);
-        return array('path' => $path, 'name' => $fileName);
+        $path = [
+            'small' => Storage::url($smallFilePath),
+            'medium' => Storage::url($mediumFilePath),
+            'large' => Storage::url($largeFilePath),
+            'original' => Storage::url($originalImage)
+        ];
+
+        return ['path' => $path,
+            'storage_path' => $storagePath,
+            'web_path' => Storage::url($originalImage),
+            'name' => $fileName];
     }
 
     /**

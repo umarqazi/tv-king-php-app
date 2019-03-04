@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property integer $id
  * @property string $storage_path
+ * @property string $web_path
  * @property string $data
  * @property string $name
  * @property integer imageable_id
@@ -25,6 +26,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Image extends Model
 {
+    protected $casts = [
+        'data' => 'json'
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo

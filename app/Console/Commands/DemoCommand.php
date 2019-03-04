@@ -116,8 +116,9 @@ class DemoCommand extends Command
             }
         }
         $faker = Factory::create();
+        $createdUsers = [];
         foreach ($emails as $key => $email) {
-            VarDumper::dump('Creating Brand ' . $email);
+            VarDumper::dump('Creating Users ' . $email);
             $user = User::where("email", "=", $email)->first();
             if ($user == null) {
                 $user = new User();
@@ -127,10 +128,10 @@ class DemoCommand extends Command
                 $user->user_type = $user_type;
                 $user->password = Hash::make('abc123');
                 $user->save();
-
-                $this->createChallenges($user->id, 15);
             }
+            $createdUsers[] = $user->id;
         }
+        return $createdUsers;
     }
 
     /**
@@ -159,7 +160,11 @@ class DemoCommand extends Command
             ['email' => 'fahad.shehzad+b{counter}_19@gems.techverx.com', 'count' => 10],
             ['email' => 'fahad.shehzad+b{counter}_18@gems.techverx.com', 'count' => 10],
             ];
-        $this->createUsers($emailsTpl, IUserType::BRAND);
+        $brands = $this->createUsers($emailsTpl, IUserType::BRAND);
+        foreach ($brands as $idx => $brand_id){
+            $this->createChallenges($brand_id, 15);
+        }
+
     }
 
     private function createCustomers($count = 3)
