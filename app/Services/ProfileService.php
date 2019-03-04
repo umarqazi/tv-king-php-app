@@ -54,7 +54,8 @@ class ProfileService
         $user = $this->userService->findById($form->user_id);
         $savedProfileImage = $user->profileImage;
         if($savedProfileImage !== null){
-            Storage::disk()->deleteDirectory($savedProfileImage->storage_path);
+            $profileDisk = Storage::disk('profile_images');
+            $profileDisk->deleteDirectory($savedProfileImage->storage_path);
         }
         $file     = $this->uploadImages($profile, $form->user_id);
         $image    = $this->userService->storeImage($file, $user );
