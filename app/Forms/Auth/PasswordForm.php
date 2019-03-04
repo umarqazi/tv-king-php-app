@@ -20,6 +20,7 @@ class PasswordForm extends BaseForm
     public $old_password;
     public $password;
     public $password_confirmation;
+    public $user_id;
 
     /**
      * Get the instance as an array.
@@ -31,7 +32,8 @@ class PasswordForm extends BaseForm
         return [
             'old_password' => $this->old_password,
             'password' => $this->password,
-            'password_confirmation' => $this->password_confirmation
+            'password_confirmation' => $this->password_confirmation,
+            'user_id' => $this->user_id,
         ];
     }
 

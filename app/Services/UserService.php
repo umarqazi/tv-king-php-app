@@ -107,7 +107,7 @@ class UserService extends BaseService implements IUserType {
             $image = new Image();
         }
         $image->storage_path = $file['storage_path'];
-        $image->data         = json_encode($file['path']);
+        $image->data         = $file['path'];
         $image->name         = $file['name'];
         $image->web_path = $file['web_path'];
         $user->profileImage()->save($image);

@@ -18,6 +18,7 @@ use App\Services\ProfileService;
 use App\Http\Resources\Profile;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\JWTAuth;
 
 /**
@@ -30,17 +31,16 @@ class ProfileController extends Controller
 {
     private $userService;
     private $profileService;
-    private $jwtAuth;
 
     /**
      * ProfileController constructor.
      * @param UserService $service
+     * @param ProfileService $profileService
      */
-    public function __construct(UserService $service, ProfileService $profileService, JWTAuth $jwt)
+    public function __construct(UserService $service, ProfileService $profileService)
     {
         $this->userService = $service;
         $this->profileService = $profileService;
-        $this->jwtAuth = $jwt;
     }
 
     /**
@@ -87,6 +87,6 @@ class ProfileController extends Controller
         $form->last_name  = $request['last_name'];
         $form->user_id    = $this->currentUser();
         $user = $this->profileService->profile($form);
-        return $user;
+        return new Profile($user);
     }
 }

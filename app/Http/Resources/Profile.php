@@ -18,7 +18,7 @@ class Profile extends JsonResource
         return [
             'name' => $this->name,
             'email' => $this->email,
-            'profile' => new Image($this->profileImage)
+            'profileImage' => new Image($this->profileImage)
         ];
     }
 }

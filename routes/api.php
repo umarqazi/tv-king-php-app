@@ -54,10 +54,10 @@ Route::prefix('/customer/v1/')->group(function () {
 
 
     Route::group(['middleware' =>[ 'jwt.auth','customer.authenticator']], function(){
-        Route::get('/profile', '\App\Http\Controllers\Api\Customer\v1\ProfileController@index');
-        Route::post('/profile', '\App\Http\Controllers\Api\Customer\v1\ProfileController@profile');
-        Route::post('/profile/password', '\App\Http\Controllers\Api\Customer\v1\ProfileController@password');
-        Route::post('/profile/image', '\App\Http\Controllers\Api\Customer\v1\ProfileController@image');
+        Route::post('/profile', '\App\Http\Controllers\Api\Customer\v1\ProfileController@profile')->name('customer.change.profile');
+        Route::post('/profile/password', '\App\Http\Controllers\Api\Customer\v1\ProfileController@password')->name('customer.change.password');
+        Route::post('/profile/image', '\App\Http\Controllers\Api\Customer\v1\ProfileController@image')->name('customer.profile.image');
+        Route::get('/profile', '\App\Http\Controllers\Api\Customer\v1\ProfileController@index')->name('customer.profile');
 
 
         Route::get("/challenges", '\App\Http\Controllers\Api\Customer\v1\ChallengeController@index');
@@ -76,7 +76,7 @@ Route::prefix('/brand/v1/')->group(function () {
 
     Route::group(['middleware' =>[ 'jwt.auth','brand.authenticator']], function(){
         Route::get('/profile', '\App\Http\Controllers\Api\Brand\v1\ProfileController@index');
-        Route::put('/profile', '\App\Http\Controllers\Api\Brand\v1\ProfileController@profile');
+        Route::post('/profile', '\App\Http\Controllers\Api\Brand\v1\ProfileController@profile');
         Route::post('/profile/password', '\App\Http\Controllers\Api\Brand\v1\ProfileController@password');
         Route::post('/profile/image', '\App\Http\Controllers\Api\Brand\v1\ProfileController@image');
 

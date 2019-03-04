@@ -8,9 +8,13 @@
 
 namespace App\Forms\Auth;
 
-
 use App\Forms\BaseForm;
 
+/**
+ * Class ProfileImageForm
+ * @package App\Forms\Auth
+ *
+ */
 class ProfileImageForm extends BaseForm
 {
     public $profile;

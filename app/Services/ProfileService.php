@@ -54,7 +54,7 @@ class ProfileService
         $user = $this->userService->findById($form->user_id);
         $savedProfileImage = $user->profileImage;
         if($savedProfileImage !== null){
-            Storage::deleteDirectory($savedProfileImage->storage_path);
+            Storage::disk()->deleteDirectory($savedProfileImage->storage_path);
         }
         $file     = $this->uploadImages($profile, $form->user_id);
         $image    = $this->userService->storeImage($file, $user );
@@ -69,23 +69,26 @@ class ProfileService
     public function uploadImages($data, $user_id){
         $fileName   = uniqid('profile-') . '.' . $data->getClientOriginalExtension();
         $ext        = $data->getClientOriginalExtension();
-        $storagePath   = 'storage/images/profiles/'. uniqid() .'/';
-        Storage::makeDirectory($storagePath);
+
+        $profileDisk = Storage::disk('profile_images');
+
+        $storagePath   = 'profiles/'. uniqid() .'/';
+        Storage::deleteDirectory($storagePath);
 
         $img = Image::make($data->getRealPath());
-
         // Save Image In Original Size
         $img->stream();
         $originalImage = $storagePath.$fileName;
-        Storage::disk('public')->put($originalImage, $img);
+        $profileDisk->put($originalImage, $img);
 
         // Save Small Image
         $img->resize(120, 120, function ($constraint) {
             $constraint->aspectRatio();
         });
         $img->stream();
+
         $smallFilePath = $storagePath.'small-'.$fileName;
-        Storage::disk('public')->put($smallFilePath, $img);
+        $profileDisk->put($smallFilePath, $img);
 
         // Save Medium Image
         $img->resize(240, 180, function ($constraint) {
@@ -93,7 +96,7 @@ class ProfileService
         });
         $img->stream();
         $mediumFilePath = $storagePath.'medium-'.$fileName;
-        Storage::disk('public')->put($mediumFilePath, $img);
+        $profileDisk->put($mediumFilePath, $img);
 
         // Save Large Image
         $img->resize(480, 360, function ($constraint) {
@@ -101,18 +104,18 @@ class ProfileService
         });
         $img->stream();
         $largeFilePath = $storagePath.'large-'.$fileName;
-        Storage::disk('public')->put($largeFilePath, $img);
+        $profileDisk->put($largeFilePath, $img);
 
         $path = [
-            'small' => Storage::url($smallFilePath),
-            'medium' => Storage::url($mediumFilePath),
-            'large' => Storage::url($largeFilePath),
-            'original' => Storage::url($originalImage)
+            'small' => $smallFilePath,
+            'medium' => $mediumFilePath,
+            'large' => $largeFilePath,
+            'original' => $originalImage
         ];
 
         return ['path' => $path,
             'storage_path' => $storagePath,
-            'web_path' => Storage::url($originalImage),
+            'web_path' => $profileDisk->url($originalImage),
             'name' => $fileName];
     }
 

@@ -13,10 +13,12 @@ use App\Forms\Auth\PasswordForm;
 use App\Forms\Auth\ProfileForm;
 use App\Forms\Auth\ProfileImageForm;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Image;
 use App\Http\Resources\Profile;
 use App\Services\ProfileService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\JWTAuth;
 
 /**
@@ -30,6 +32,9 @@ class ProfileController extends Controller
      */
     private $profileService;
 
+    /**
+     * @var UserService
+     */
     private $userService;
 
     /**
@@ -61,6 +66,7 @@ class ProfileController extends Controller
         $form->old_password             = $request['old_password'];
         $form->password                 = $request['password'];
         $form->password_confirmation    = $request['password_confirmation'];
+        $form->user_id = Auth::id();
         $user = $this->profileService->password($form);
         return $user;
     }
@@ -73,8 +79,9 @@ class ProfileController extends Controller
         $form = new ProfileForm();
         $form->first_name = $request['first_name'];
         $form->last_name  = $request['last_name'];
+        $form->user_id = Auth::id();
         $user = $this->profileService->profile($form);
-        return $user;
+        return new Profile($user);
     }
 
     /**
@@ -84,8 +91,9 @@ class ProfileController extends Controller
     public function image(Request $request){
         $form = new ProfileImageForm();
         $form->profile = $request['profile'];
+        $form->user_id = Auth::id();
         $user = $this->profileService->image($form);
-        return $user;
+        return new Image($user);
     }
 
 }
