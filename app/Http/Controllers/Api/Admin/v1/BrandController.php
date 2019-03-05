@@ -56,12 +56,4 @@ class BrandController extends Controller
      return new Brand($brand);
     }
 
-    /**
-     * @param Request $request
-     */
-    public function store(Request $request){
-
-    }
-
-
 }

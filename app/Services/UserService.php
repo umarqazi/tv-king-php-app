@@ -43,9 +43,17 @@ class UserService extends BaseService implements IUserType {
         $user->last_name = $form->lastName;
         $user->email = $form->email;
         $user->user_type = $form->user_type;
-        $user->password = Hash::make($form->password);
+        $user->password = $this->encodePassword($form->password);
         $user->save();
         return $user;
+    }
+
+    /**
+     * @param $plain_password
+     * @return string
+     */
+    private function encodePassword($plain_password){
+        return Hash::make($plain_password);
     }
 
     /**
@@ -90,7 +98,7 @@ class UserService extends BaseService implements IUserType {
      */
     public function changePassword($user_id, $plain_password){
         $user = $this->findById($user_id);
-        $user->password = Hash::make($plain_password);
+        $user->password = $this->encodePassword($plain_password);
         $user->save();
         $user->refresh();
         return $user;

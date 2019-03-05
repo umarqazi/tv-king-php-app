@@ -34,7 +34,6 @@ Route::prefix('/admin/v1/')->group(function () {
         Route::get("/tags", '\App\Http\Controllers\Api\Admin\v1\TagController@index');
         Route::get("/tags/{id}", '\App\Http\Controllers\Api\Admin\v1\TagController@view');
 
-
         Route::get("/brands", '\App\Http\Controllers\Api\Admin\v1\BrandController@index');
         Route::get("/brand/{id}", '\App\Http\Controllers\Api\Admin\v1\BrandController@view');
         Route::get("/customers", '\App\Http\Controllers\Api\Admin\v1\CustomerController@index');
