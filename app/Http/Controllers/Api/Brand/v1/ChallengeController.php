@@ -83,6 +83,8 @@ class ChallengeController extends Controller
      */
     public function store(Request $request){
         $form = new CreatorForm();
+        $request->post('name', null);
+        $request->name;
         $form->name = $request->name;
         $form->description = $request->description;
         $form->brand_id = auth()->user()->getAuthIdentifier();

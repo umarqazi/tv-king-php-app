@@ -79,6 +79,7 @@ Route::prefix('/brand/v1/')->group(function () {
         Route::post('/profile/password', '\App\Http\Controllers\Api\Brand\v1\ProfileController@password');
         Route::post('/profile/image', '\App\Http\Controllers\Api\Brand\v1\ProfileController@image');
 
+        Route::get("/tags", '\App\Http\Controllers\Api\Brand\v1\TagController@index');
 
         Route::post("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@store');
         Route::get("/challenges", '\App\Http\Controllers\Api\Brand\v1\ChallengeController@index');
