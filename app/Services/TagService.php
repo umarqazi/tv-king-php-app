@@ -45,7 +45,7 @@ class TagService extends BaseService {
      */
     public function findByName($name)
     {
-
+        return Tag::find(['name' => $name]);
     }
     /**
      * @param $id

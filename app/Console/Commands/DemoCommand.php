@@ -94,12 +94,21 @@ class DemoCommand extends Command
             VarDumper::dump('Tag count is good');
             return;
         }
-        for($i = 0; $i< $maxCount; $i++){
-            $request = new CreatorForm();
-            $request->name = $this->faker->name;
-            $service = new TagService();
-            $tag = $service->persist($request);
-            VarDumper::dump("Tag :: {$request->name}, ID :: {$tag->id}");
+        $tagTemplates = ['Cricket', 'Super King', 'Fun Master', 'Action Game', 'SpeedorMeter',
+            'Eye Opener', 'PSL#2019', 'Zalmi', 'Karachi Kings',
+            'Extreme Sport', 'Swimmer', 'Standup Comedy', 'Git Workflow', 'Moment Capture',
+            'Dare Challenges', 'Annual Trips', 'Life at Techverx', 'Project Delivery Celeberations',
+            'Die Hard Efforts', 'Lahore Qalenders', 'Life of a Programmer', 'Sprite Challenge'];
+
+        $service = new TagService();
+        foreach ($tagTemplates as $key => $tagName){
+            $existingTag = $service->findByName($tagName);
+            if($existingTag == null ){
+                $request = new CreatorForm();
+                $request->name = $tagName;
+                $tag = $service->persist($request);
+                VarDumper::dump("Tag :: {$request->name}, ID :: {$tag->id}");
+            }
         }
     }
 
