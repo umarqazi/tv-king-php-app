@@ -4,8 +4,6 @@ namespace App\Console\Commands;
 
 use App\Forms\Auth\ProfileForm;
 use App\Forms\Challenge\WinnerForm;
-use App\Http\Requests\ChallengeRequest;
-use App\Http\Requests\UserSignup;
 use App\Models\Tag;
 use App\Models\User;
 use App\Services\BrandService;
@@ -193,9 +191,62 @@ class DemoCommand extends Command
      */
     private function createChallenges ($brand_id, $count = 3){
         VarDumper::dump('Creating Challanges for Brand ' . $brand_id);
-        for($i = 0; $i< $count; $i++){
-            $this->createChallange($brand_id);
+        $service = new ChallengeService();
+        for($unpublishedCount = 0; $unpublishedCount < 10; $unpublishedCount++){
+            $challenge = $this->createChallange($brand_id);
         }
+        for($publishedCount = 0; $publishedCount < 10; $publishedCount++){
+            $challenge = $this->createChallange($brand_id);
+            $service->publish($challenge->id);
+            $this->submitTricks($challenge->id);
+        }
+        for($winnerChallenges = 0; $winnerChallenges < $count; $winnerChallenges++){
+            $challenge = $this->createChallange($brand_id);
+            $service->publish($challenge->id);
+            $this->submitTricks($challenge->id);
+            $this->challengeWinner($challenge->id);
+        }
+    }
+
+    /**
+     * @param $challenge_id
+     */
+    private function submitTricks($challenge_id){
+        $service = new ChallengeService();
+        $service->publish($challenge_id);
+        VarDumper::dump('Creating Challenge ' . $challenge_id);
+
+        $customers = $this->randomCustomers(20);
+        foreach ($customers as $idx => $customer_id){
+            $this->submitTrick($customer_id, $challenge_id);
+        }
+    }
+
+    private function challengeWinner($challenge_id){
+        $service = new ChallengeService();
+        $challenge = $service->findById($challenge_id);
+        $tricks = Arr::shuffle($challenge->tricks->pluck('id', 'id')->toArray());
+        $winnerTrick = Arr::random($tricks, 1);
+        $winnerForm = new WinnerForm();
+        $winnerForm->challenge_id = $challenge->id;
+        $winnerForm->trick_id = $winnerTrick[0];
+        $winnerForm->notes = $this->faker->sentence;
+        $trickChallenge = $service->winner($winnerForm);
+        VarDumper::dump('Verifiing Winner :: ' . $trickChallenge->winner->id . ' == ' . $winnerTrick[0]);
+    }
+
+    /**
+     * @param $customer_id
+     * @param $challenge_id
+     * @throws ValidationException
+     */
+    private function submitTrick($customer_id, $challenge_id){
+        $form = new \App\Forms\Trick\CreatorForm();
+        $form->challenge_id = $challenge_id;
+        $form->customer_id = $customer_id;
+        $form->description = $this->faker->sentence;
+        $service = new TrickService();
+        $service->persist($form);
     }
 
     private function random_tags($count = 3){
@@ -206,6 +257,7 @@ class DemoCommand extends Command
 
     /**
      * @param $brand_id
+     * @return \App\Models\Challenge
      */
     private function createChallange($brand_id){
         $tags = $this->random_tags(3);
@@ -228,24 +280,7 @@ class DemoCommand extends Command
         if($form->passes()){
             $service = new ChallengeService();
             $challenge = $service->persist($form);
-            $service->publish($challenge->id);
-            VarDumper::dump('Creating Challenge ' . $challenge->id);
-
-            $customers = $this->randomCustomers(20);
-            foreach ($customers as $idx => $customer_id){
-                $this->submitTrick($customer_id, $challenge->id);
-            }
-            $challenge->refresh();
-            $tricks = Arr::shuffle($challenge->tricks->pluck('id', 'id')->toArray());
-
-            $winnerTrick = Arr::random($tricks, 1);
-            $winnerForm = new WinnerForm();
-            $winnerForm->challenge_id = $challenge->id;
-            $winnerForm->trick_id = $winnerTrick[0];
-            $winnerForm->notes = $this->faker->sentence;
-            $trickChallenge = $service->winner($winnerForm);
-
-            VarDumper::dump('Verifiing Winner :: ' . $trickChallenge->winner->id . ' == ' . $winnerTrick[0]);
+            return $challenge;
         }else{
             dd($form->errors());
         }
@@ -259,15 +294,6 @@ class DemoCommand extends Command
         return array_combine(array_values($rand), array_values($rand));
     }
 
-    private function submitTrick($customer_id, $challenge_id){
-        $form = new \App\Forms\Trick\CreatorForm();
-        $form->challenge_id = $challenge_id;
-        $form->customer_id = $customer_id;
-        $form->description = $this->faker->sentence;
 
-        $service = new TrickService();
-        $service->persist($form);
-
-    }
 
 }
